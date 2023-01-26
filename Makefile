@@ -24,9 +24,9 @@ release:
 .PHONY: build
 build:
 	mass bundle build
-	cd src/kms && terraform fmt && terraform init  && terraform validate
-	cd src/service_linked_role && terraform fmt && terraform init && terraform validate
-	cd src/opensearch && terraform fmt && terraform init  && terraform validate
+	cd kms && terraform fmt && terraform init  && terraform validate
+	cd service_linked_role && terraform fmt && terraform init && terraform validate
+	cd opensearch && terraform fmt && terraform init  && terraform validate
 
 .PHONY: publish
 publish: build

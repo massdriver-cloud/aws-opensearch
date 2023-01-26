@@ -99,7 +99,7 @@ Form input parameters for configuring a bundle for deployment.
         - R6GD Memory Optimized (NVME SSD) 12xlarge Extra Large (48 vCPUs, 384 GiB RAM)
         - I3 Storage Optimized 16xlarge Extra Large (64 vCPUs, 488 GiB RAM)
         - R6GD Memory Optimized (NVME SSD) 16xlarge Extra Large (64 vCPUs, 512 GiB RAM)
-  - **`master_nodes`** *(object)*
+  - **`master_nodes`** *(object)*: Amazon OpenSearch Service uses dedicated master nodes to increase cluster stability. A dedicated master node performs cluster management tasks, but does not hold data or respond to data upload requests.
     - **`enabled`** *(boolean)*: Enables 3 dedicated master nodes. Types are automatically selected based on your data node types. Default: `False`.
 - **`logging`** *(object)*
   - **`audit_logs`** *(integer)*: Must be one of: `[1, 3, 5, 7, 14, 30, 60, 90, 120, 150, 180, 365, 400, 545, 731, 1827, 2192, 2557, 2922, 3288, 3653]`. Default: `365`.
@@ -116,6 +116,8 @@ Form input parameters for configuring a bundle for deployment.
       - 1.2
       - 1.1
       - 1.0
+- **`security`** *(object)*
+  - **`enable_fgac`** *(boolean)*: **This CANNOT be turned on during the first deployment**. [Fine-grained access control](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html) offers additional ways of controlling access to your data on Amazon OpenSearch Service. Default: `False`.
 ## Examples
 
   ```json

@@ -91,7 +91,7 @@ resource "aws_opensearch_domain" "main" {
     enabled = true
 
     internal_user_database_enabled = true
-    # anonymous_auth_enabled         = true # TODO: turned this on in the UI... disable again
+    anonymous_auth_enabled         = var.security.enable_fgac
     master_user_options {
       master_user_name     = random_pet.master_user_username.id
       master_user_password = random_password.master_user_password.result

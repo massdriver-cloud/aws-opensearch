@@ -6,13 +6,13 @@ access: private
 type: infrastructure
 
 steps:
-  - path: src/service_linked_role
+  - path: service_linked_role
     provisioner: terraform
     skip_on_delete: true
-  - path: src/kms
+  - path: kms
     provisioner: terraform
     skip_on_delete: true
-  - path: src/opensearch
+  - path: opensearch
     provisioner: terraform
 
 params:
@@ -54,6 +54,7 @@ params:
     - cluster
     - logging
     - networking
+    - security
   properties:
     opensearch:
       required:
@@ -87,10 +88,12 @@ params:
       description: Cluster Configuration.
       properties:
         master_nodes:
+          title: Master Nodes
+          description: Amazon OpenSearch Service uses dedicated master nodes to increase cluster stability. A dedicated master node performs cluster management tasks, but does not hold data or respond to data upload requests.
           type: object
           properties:
             enabled:
-              title: Enabled Master Nodes
+              title: Enabled
               default: false
               type: boolean
               description: Enables 3 dedicated master nodes. Types are automatically selected based on your data node types.
@@ -198,7 +201,6 @@ params:
                   const: i3.16xlarge.search
                 - title: R6GD Memory Optimized (NVME SSD) 16xlarge Extra Large (64 vCPUs, 512 GiB RAM)
                   const: r6gd.16xlarge.search
-
     logging:
       type: object
       title: Logging
@@ -333,6 +335,15 @@ params:
             - internal
             - private
           default: internal
+    security:
+      title: Security
+      type: object
+      properties:
+        enable_fgac:
+          title: Fine-Grained Access Control
+          description: "**This CANNOT be turned on during the first deployment**. [Fine-grained access control](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html) offers additional ways of controlling access to your data on Amazon OpenSearch Service."
+          default: false
+          type: boolean
 connections:
   required: [network, aws_authentication]
   properties:
@@ -348,9 +359,7 @@ artifacts:
       $ref: massdriver/opensearch-authentication
 
 ui:
-  ui:order: [opensearch, cluster, networking, logging]
-  opensearch:
-    ui:order: version
+  ui:order: [opensearch, cluster, networking, logging, security]
   cluster:
     ui:order: [master_nodes, data_nodes]
     data_nodes:

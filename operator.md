@@ -58,10 +58,9 @@ When designing bundles, Massdrivers aims for the 80% use case. If any of the cav
 3. No support for T3 Class instances as they frequently time out during provisioning. If you need T3 support, please contact us by clicking the chat icon on your sidebar.
 4. Instance count & type are marked immutable as the Terraform provider doesn't appear to support blue/green deploys. We are tracking this issue [here](https://github.com/massdriver-cloud/aws-opensearch/issues/12).
 
-### References
+### Additional OpenSearch Resources
 
-* [OpenSearch Home Page](https://opensearch.org/)
+* [Home Page](https://opensearch.org/)
 * [Developer Guide](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html)
 * [Instance types](https://instances.vantage.sh/opensearch/)
 * [Pricing](https://aws.amazon.com/opensearch-service/pricing/)
-* [Fine Grained Access Control](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html#fgac-forget)

@@ -1,7 +1,7 @@
 require "csv"
 require "yaml"
 
-if ARGV.length != 1
+if ARGV.length < 1
   puts <<-HELP
 
 This will generate a const/title list for use in the params schema from instances.csv.
@@ -13,11 +13,13 @@ Examples:
 ruby hack/instances.rb data
 ruby hack/instances.rb master
 ruby hack/instances.rb warm
+ruby hack/instances.rb data ebs # to filter by ebs only
 HELP
   exit 1
 end
 
 type = ARGV[0]
+ebs = ARGV[1]
 
 $supported_instance_classes = {
   "data" => ['c5', 'c6g', 'i3', 'm5', 'm6g', 'r5', 'r6gd'],
@@ -47,6 +49,8 @@ sorted.each do |entry|
 
   instance_class = entry["API Name"].split(".").first
   next if !$supported_instance_class.include?(instance_class)
+
+  next if ebs && storage !~ /EBS/
 
   options << {
     "title" => "#{name} (#{cpus}, #{memory} RAM)",

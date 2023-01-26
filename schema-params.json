@@ -249,14 +249,16 @@
                     "type": "object"
                 },
                 "master_nodes": {
+                    "description": "Amazon OpenSearch Service uses dedicated master nodes to increase cluster stability. A dedicated master node performs cluster management tasks, but does not hold data or respond to data upload requests.",
                     "properties": {
                         "enabled": {
                             "default": false,
                             "description": "Enables 3 dedicated master nodes. Types are automatically selected based on your data node types.",
-                            "title": "Enabled Master Nodes",
+                            "title": "Enabled",
                             "type": "boolean"
                         }
                     },
+                    "title": "Master Nodes",
                     "type": "object"
                 }
             },
@@ -445,13 +447,26 @@
             ],
             "title": "OpenSearch",
             "type": "object"
+        },
+        "security": {
+            "properties": {
+                "enable_fgac": {
+                    "default": false,
+                    "description": "**This CANNOT be turned on during the first deployment**. [Fine-grained access control](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html) offers additional ways of controlling access to your data on Amazon OpenSearch Service.",
+                    "title": "Fine-Grained Access Control",
+                    "type": "boolean"
+                }
+            },
+            "title": "Security",
+            "type": "object"
         }
     },
     "required": [
         "opensearch",
         "cluster",
         "logging",
-        "networking"
+        "networking",
+        "security"
     ],
     "title": "aws-opensearch"
 }

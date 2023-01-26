@@ -19,13 +19,11 @@
             "audit_logs"
         ]
     },
-    "opensearch": {
-        "ui:order": "version"
-    },
     "ui:order": [
         "opensearch",
         "cluster",
         "networking",
-        "logging"
+        "logging",
+        "security"
     ]
 }
