@@ -8,11 +8,8 @@ resource "aws_security_group" "main" {
   }
 }
 
-# TODO: enable security groups once bundle spec is updated to emit in artifact.
-# resource "aws_security_group_rule" "ingress_security_groups" {
-# }
-
 # Note: this rule here is to support ingress from the VPC until we add in security group support for applications in AWS
+# https://github.com/massdriver-cloud/aws-opensearch/issues/13
 resource "aws_security_group_rule" "ingress_cidr_blocks" {
   count             = 1
   description       = "From allowed CIDRs"

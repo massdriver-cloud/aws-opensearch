@@ -1,3 +1,8 @@
+
+data "aws_kms_alias" "opensearch" {
+  name = "alias/${var.md_metadata.name_prefix}-opensearch-encryption"
+}
+
 resource "random_string" "domain_name_first" {
   length  = 1
   lower   = true
@@ -15,6 +20,10 @@ resource "random_string" "domain_name" {
   upper            = false
 }
 
+resource "random_pet" "master_user_username" {
+  separator = ""
+}
+
 resource "random_password" "master_user_password" {
   length      = 16
   lower       = true
@@ -27,27 +36,31 @@ resource "random_password" "master_user_password" {
   min_numeric = 1
 }
 
-locals {
-  domain_name = "${random_string.domain_name_first.result}${random_string.domain_name.result}"
-}
-
 resource "aws_opensearch_domain" "main" {
   depends_on     = [aws_cloudwatch_log_resource_policy.opensearch_log_publishing_policy]
   domain_name    = local.domain_name
   engine_version = var.opensearch.version
 
   cluster_config {
-    instance_type  = var.cluster.instance_type
-    instance_count = var.cluster.instance_count
-    # zone_awareness_enabled = true
-    # zone_awareness_config = {
-    #   availability_zone_count = 2 # or 3
-    # }
+    instance_type  = var.cluster.data_nodes.instance_type
+    instance_count = var.cluster.data_nodes.instance_count
+    # dedicated_master_count   = 3
+    # dedicated_master_enabled = var.cluster.master_nodes.enabled
+    # dedicated_master_type    = local.master_nodes_instance_type
+    zone_awareness_enabled = local.auto_enable_zone_awareness
+    zone_awareness_config {
+      availability_zone_count = local.auto_enable_zone_awareness ? local.availability_zone_count : null
+    }
   }
 
   encrypt_at_rest {
-    enabled = true
-    # TODO: custom KMS in pre-step, skip on
+    enabled    = true
+    kms_key_id = data.aws_kms_alias.opensearch.id
+  }
+
+  auto_tune_options {
+    desired_state       = "ENABLED"
+    rollback_on_disable = "NO_ROLLBACK"
   }
 
   node_to_node_encryption {
@@ -61,7 +74,7 @@ resource "aws_opensearch_domain" "main" {
 
   vpc_options {
     security_group_ids = [aws_security_group.main.id]
-    subnet_ids         = slice(local.subnet_ids[var.networking.subnet_type], 0, local.num_azs)
+    subnet_ids         = slice(local.subnet_ids[var.networking.subnet_type], 0, local.availability_zone_count)
   }
 
   dynamic "log_publishing_options" {
@@ -77,10 +90,10 @@ resource "aws_opensearch_domain" "main" {
     # One form of auth must be configured below for audit logs
     enabled = true
 
-    # TODO: TEMPORARY TO GET PAST AUDIT LOGS (need to make this conditional based on authN reqs)
     internal_user_database_enabled = true
+    # anonymous_auth_enabled         = true # TODO: turned this on in the UI... disable again
     master_user_options {
-      master_user_name     = "masteruser"
+      master_user_name     = random_pet.master_user_username.id
       master_user_password = random_password.master_user_password.result
     }
   }

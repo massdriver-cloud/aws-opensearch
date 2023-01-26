@@ -2,8 +2,7 @@ resource "aws_cloudwatch_log_group" "main" {
   for_each          = var.logging
   name_prefix       = "/aws/opensearch/${var.md_metadata.name_prefix}/${each.key}/"
   retention_in_days = each.value
-  # TODO KMS Key
-  # kms_key_id        = var.kms_key_id
+  kms_key_id        = data.aws_kms_alias.opensearch.arn
 }
 
 locals {

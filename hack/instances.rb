@@ -1,6 +1,32 @@
 require "csv"
 require "yaml"
 
+if ARGV.length != 1
+  puts <<-HELP
+
+This will generate a const/title list for use in the params schema from instances.csv.
+
+A node type is required.
+
+Examples:
+
+ruby hack/instances.rb data
+ruby hack/instances.rb master
+ruby hack/instances.rb warm
+HELP
+  exit 1
+end
+
+type = ARGV[0]
+
+$supported_instance_classes = {
+  "data" => ['c5', 'c6g', 'i3', 'm5', 'm6g', 'r5', 'r6gd'],
+  "master" => [],
+  "warm" => ['ultrawarm1']
+}
+
+$supported_instance_class = $supported_instance_classes[type]
+
 file = File.read("#{__dir__}/instances.csv")
 table = CSV.parse(file, headers: true)
 
@@ -12,9 +38,6 @@ sorted = table.sort_by{|entry|
   [memory, cpus]
 }
 
-$slow_instance_classes = ['t2', 't3', 'm3']
-$warm_instances_classes = ['ultrawarm1']
-
 sorted.each do |entry|
 
   name = entry["Name"]
@@ -23,11 +46,7 @@ sorted.each do |entry|
   storage = entry["Storage"]
 
   instance_class = entry["API Name"].split(".").first
-  next if $slow_instance_classes.include?(instance_class)
-  next if $warm_instances_classes.include?(instance_class)
-
-  # TODO: remove EBS Only exclusion
-  next if storage == "EBS Only"
+  next if !$supported_instance_class.include?(instance_class)
 
   options << {
     "title" => "#{name} (#{cpus}, #{memory} RAM)",

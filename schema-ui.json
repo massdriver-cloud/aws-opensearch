@@ -1,14 +1,26 @@
 {
     "cluster": {
+        "data_nodes": {
+            "ui:order": [
+                "instance_type",
+                "instance_count"
+            ]
+        },
         "ui:order": [
-            "instance_type",
-            "instance_count"
+            "master_nodes",
+            "data_nodes"
+        ]
+    },
+    "logging": {
+        "ui:order": [
+            "index_slow_logs",
+            "search_slow_logs",
+            "es_application_logs",
+            "audit_logs"
         ]
     },
     "opensearch": {
-        "ui:order": [
-            "version"
-        ]
+        "ui:order": "version"
     },
     "ui:order": [
         "opensearch",

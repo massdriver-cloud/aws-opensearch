@@ -8,7 +8,9 @@ type: infrastructure
 steps:
   - path: src/service_linked_role
     provisioner: terraform
-    # TODO: appears not to work...
+    skip_on_delete: true
+  - path: src/kms
+    provisioner: terraform
     skip_on_delete: true
   - path: src/opensearch
     provisioner: terraform
@@ -19,13 +21,32 @@ params:
       opensearch:
         version: OpenSearch_2.3
       cluster:
-        instance_type: r6gd.large.search
-        instance_count: 1
+        data_nodes:
+          instance_type: r6gd.large.search
+          instance_count: 1
+        master_nodes:
+          enabled: false
       logging:
         index_slow_logs: 1
         search_slow_logs: 1
         es_application_logs: 1
         audit_logs: 1
+      networking:
+        subnet_type: internal
+    - __name: Production
+      opensearch:
+        version: OpenSearch_2.3
+      cluster:
+        data_nodes:
+          instance_type: r6gd.large.search
+          instance_count: 3
+        master_nodes:
+          enabled: true
+      logging:
+        index_slow_logs: 30
+        search_slow_logs: 30
+        es_application_logs: 30
+        audit_logs: 90
       networking:
         subnet_type: internal
   required:
@@ -59,62 +80,124 @@ params:
               const: OpenSearch_1.0
     cluster:
       required:
-        - instance_type
+        - data_nodes
+        - master_nodes
       type: object
       title: Cluster
       description: Cluster Configuration.
       properties:
-        instance_count:
-          title: Instance Count
-          type: integer
-          default: 1
-          minimum: 1
-        instance_type:
-          $md.immutable: true
-          title: Instance Type
-          type: string
-          default: r6gd.xlarge.search
-          oneOf:
-            - title: R3 Memory Optimized Large (2 vCPUs, 15 GiB RAM)
-              const: r3.large.search
-            - title: I3 Storage Optimized Large (2 vCPUs, 15.25 GiB RAM)
-              const: i3.large.search
-            - title: R6GD Memory Optimized (NVME SSD) Large (2 vCPUs, 16 GiB RAM)
-              const: r6gd.large.search
-            - title: R3 Memory Optimized Extra Large (4 vCPUs, 30.5 GiB RAM)
-              const: r3.xlarge.search
-            - title: I3 Storage Optimized Extra Large (4 vCPUs, 30.5 GiB RAM)
-              const: i3.xlarge.search
-            - title: I2 Storage Optimized Extra Large (4 vCPUs, 30.5 GiB RAM)
-              const: i2.xlarge.search
-            - title: R6GD Memory Optimized (NVME SSD) Extra Large (4 vCPUs, 32 GiB RAM)
-              const: r6gd.xlarge.search
-            - title: R3 Memory Optimized Double Extra Large (8 vCPUs, 61 GiB RAM)
-              const: r3.2xlarge.search
-            - title: I3 Storage Optimized Double Extra Large (8 vCPUs, 61 GiB RAM)
-              const: i3.2xlarge.search
-            - title: I2 Storage Optimized Double Extra Large (8 vCPUs, 61 GiB RAM)
-              const: i2.2xlarge.search
-            - title: R6GD Memory Optimized (NVME SSD) Double Extra Large (8 vCPUs, 64 GiB RAM)
-              const: r6gd.2xlarge.search
-            - title: R3 Memory Optimized Quadruple Extra Large (16 vCPUs, 122 GiB RAM)
-              const: r3.4xlarge.search
-            - title: I3 Storage Optimized Quadruple Extra Large (16 vCPUs, 122 GiB RAM)
-              const: i3.4xlarge.search
-            - title: R6GD Memory Optimized (NVME SSD) Quadruple Extra Large (16 vCPUs, 128 GiB RAM)
-              const: r6gd.4xlarge.search
-            - title: R3 Memory Optimized Eight Extra Large (32 vCPUs, 244 GiB RAM)
-              const: r3.8xlarge.search
-            - title: I3 Storage Optimized Eight Extra Large (32 vCPUs, 244 GiB RAM)
-              const: i3.8xlarge.search
-            - title: R6GD Memory Optimized (NVME SSD) Eight Extra Large (32 vCPUs, 256 GiB RAM)
-              const: r6gd.8xlarge.search
-            - title: R6GD Memory Optimized (NVME SSD) 12xlarge Extra Large (48 vCPUs, 384 GiB RAM)
-              const: r6gd.12xlarge.search
-            - title: I3 Storage Optimized 16xlarge Extra Large (64 vCPUs, 488 GiB RAM)
-              const: i3.16xlarge.search
-            - title: R6GD Memory Optimized (NVME SSD) 16xlarge Extra Large (64 vCPUs, 512 GiB RAM)
-              const: r6gd.16xlarge.search
+        master_nodes:
+          type: object
+          properties:
+            enabled:
+              title: Enabled Master Nodes
+              default: false
+              type: boolean
+              description: Enables 3 dedicated master nodes. Types are automatically selected based on your data node types.
+        data_nodes:
+          title: Data Nodes
+          type: object
+          required:
+            - instance_type
+            - instance_count
+          properties:
+            instance_count:
+              $md.immutable: true
+              title: Instance Count
+              description: Number of instances in the cluster. This field is currently immutable [learn more](https://github.com/massdriver-cloud/aws-opensearch/issues/12).
+              type: integer
+              default: 1
+              minimum: 1
+              maximum: 80
+            instance_type:
+              $md.immutable: true
+              title: Instance Type
+              description: Instance type of **data nodes** in the cluster. This field is immutable [learn more]()
+              type: string
+              default: r6gd.xlarge.search
+              oneOf:
+                - title: C6G Compute Optimized Large (2 vCPUs, 4 GiB RAM)
+                  const: c6g.large.search
+                - title: C5 Compute Optimized Large (2 vCPUs, 4 GiB RAM)
+                  const: c5.large.search
+                - title: M6G General Purpose Large (2 vCPUs, 8 GiB RAM)
+                  const: m6g.large.search
+                - title: M5 General Purpose Large (2 vCPUs, 8 GiB RAM)
+                  const: m5.large.search
+                - title: C6G Compute Optimized Extra Large (4 vCPUs, 8 GiB RAM)
+                  const: c6g.xlarge.search
+                - title: C5 Compute Optimized Extra Large (4 vCPUs, 8 GiB RAM)
+                  const: c5.xlarge.search
+                - title: I3 Storage Optimized Large (2 vCPUs, 15.25 GiB RAM)
+                  const: i3.large.search
+                - title: R5 Memory Optimized Large (2 vCPUs, 16 GiB RAM)
+                  const: r5.large.search
+                - title: R6GD Memory Optimized (NVME SSD) Large (2 vCPUs, 16 GiB RAM)
+                  const: r6gd.large.search
+                - title: M6G General Purpose Extra Large (4 vCPUs, 16 GiB RAM)
+                  const: m6g.xlarge.search
+                - title: M5 General Purpose Extra Large (4 vCPUs, 16 GiB RAM)
+                  const: m5.xlarge.search
+                - title: C6G Compute Optimized Double Extra Large (8 vCPUs, 16 GiB RAM)
+                  const: c6g.2xlarge.search
+                - title: C5 Compute Optimized Double Extra Large (8 vCPUs, 16 GiB RAM)
+                  const: c5.2xlarge.search
+                - title: I3 Storage Optimized Extra Large (4 vCPUs, 30.5 GiB RAM)
+                  const: i3.xlarge.search
+                - title: R5 Memory Optimized Extra Large (4 vCPUs, 32 GiB RAM)
+                  const: r5.xlarge.search
+                - title: R6GD Memory Optimized (NVME SSD) Extra Large (4 vCPUs, 32 GiB RAM)
+                  const: r6gd.xlarge.search
+                - title: M5 General Purpose Double Extra Large (8 vCPUs, 32 GiB RAM)
+                  const: m5.2xlarge.search
+                - title: M6G General Purpose Double Extra Large (8 vCPUs, 32 GiB RAM)
+                  const: m6g.2xlarge.search
+                - title: C5 Compute Optimized Quadruple Extra Large (16 vCPUs, 32 GiB RAM)
+                  const: c5.4xlarge.search
+                - title: C6G Compute Optimized Quadruple Extra Large (16 vCPUs, 32 GiB RAM)
+                  const: c6g.4xlarge.search
+                - title: I3 Storage Optimized Double Extra Large (8 vCPUs, 61 GiB RAM)
+                  const: i3.2xlarge.search
+                - title: R5 Memory Optimized Double Extra Large (8 vCPUs, 64 GiB RAM)
+                  const: r5.2xlarge.search
+                - title: R6GD Memory Optimized (NVME SSD) Double Extra Large (8 vCPUs, 64 GiB RAM)
+                  const: r6gd.2xlarge.search
+                - title: M6G General Purpose Quadruple Extra Large (16 vCPUs, 64 GiB RAM)
+                  const: m6g.4xlarge.search
+                - title: M5 General Purpose Quadruple Extra Large (16 vCPUs, 64 GiB RAM)
+                  const: m5.4xlarge.search
+                - title: C6G Compute Optimized Eight Extra Large (32 vCPUs, 64 GiB RAM)
+                  const: c6g.8xlarge.search
+                - title: C5 Compute Optimized 9xlarge (36 vCPUs, 72 GiB RAM)
+                  const: c5.9xlarge.search
+                - title: C6G Compute Optimized 12xlarge Extra Large (48 vCPUs, 96 GiB RAM)
+                  const: c6g.12xlarge.search
+                - title: I3 Storage Optimized Quadruple Extra Large (16 vCPUs, 122 GiB RAM)
+                  const: i3.4xlarge.search
+                - title: R5 Memory Optimized Quadruple Extra Large (16 vCPUs, 128 GiB RAM)
+                  const: r5.4xlarge.search
+                - title: R6GD Memory Optimized (NVME SSD) Quadruple Extra Large (16 vCPUs, 128 GiB RAM)
+                  const: r6gd.4xlarge.search
+                - title: M6G General Purpose Eight Extra Large (32 vCPUs, 128 GiB RAM)
+                  const: m6g.8xlarge.search
+                - title: C5 Compute Optimized 18xlarge (72 vCPUs, 144 GiB RAM)
+                  const: c5.18xlarge.search
+                - title: M6G General Purpose 12xlarge Extra Large (48 vCPUs, 192 GiB RAM)
+                  const: m6g.12xlarge.search
+                - title: M5 General Purpose 12xlarge Extra Large (48 vCPUs, 192 GiB RAM)
+                  const: m5.12xlarge.search
+                - title: I3 Storage Optimized Eight Extra Large (32 vCPUs, 244 GiB RAM)
+                  const: i3.8xlarge.search
+                - title: R6GD Memory Optimized (NVME SSD) Eight Extra Large (32 vCPUs, 256 GiB RAM)
+                  const: r6gd.8xlarge.search
+                - title: R5 Memory Optimized 12xlarge Extra Large (48 vCPUs, 384 GiB RAM)
+                  const: r5.12xlarge.search
+                - title: R6GD Memory Optimized (NVME SSD) 12xlarge Extra Large (48 vCPUs, 384 GiB RAM)
+                  const: r6gd.12xlarge.search
+                - title: I3 Storage Optimized 16xlarge Extra Large (64 vCPUs, 488 GiB RAM)
+                  const: i3.16xlarge.search
+                - title: R6GD Memory Optimized (NVME SSD) 16xlarge Extra Large (64 vCPUs, 512 GiB RAM)
+                  const: r6gd.16xlarge.search
 
     logging:
       type: object
@@ -251,28 +334,30 @@ params:
             - private
           default: internal
 connections:
-  required:
-    - network
-    - aws_authentication
+  required: [network, aws_authentication]
   properties:
     network:
-      "$ref": massdriver/aws-vpc
+      $ref: massdriver/aws-vpc
     aws_authentication:
-      "$ref": massdriver/aws-iam-role
+      $ref: massdriver/aws-iam-role
 
 artifacts:
-  properties: {}
+  required: [authentication]
+  properties:
+    authentication:
+      $ref: massdriver/opensearch-authentication
 
 ui:
-  ui:order:
-    - opensearch
-    - cluster
-    - networking
-    - logging
+  ui:order: [opensearch, cluster, networking, logging]
   opensearch:
-    ui:order:
-      - version
+    ui:order: version
   cluster:
+    ui:order: [master_nodes, data_nodes]
+    data_nodes:
+      ui:order: [instance_type, instance_count]
+  logging:
     ui:order:
-      - instance_type
-      - instance_count
+      - index_slow_logs
+      - search_slow_logs
+      - es_application_logs
+      - audit_logs
