@@ -1,5 +1,5 @@
 {
     "do_not_delete": [
-        "aws_opensearch_domain.main"
+        "aws_opensearch_domain.*"
     ]
 }

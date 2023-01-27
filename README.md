@@ -15,7 +15,7 @@ Amazon OpenSearch is a managed service that allows you to set up, manage, and sc
 
 ## Design
 
-For detailed information, check out our [Operator Guide](operator.mdx) for this bundle.
+For detailed information, check out our [Operator Guide](operator.md) for this bundle.
 
 ## Usage
 
@@ -55,8 +55,8 @@ Form input parameters for configuring a bundle for deployment.
 
 - **`cluster`** *(object)*: Cluster Configuration.
   - **`data_nodes`** *(object)*
-    - **`instance_count`** *(integer)*: Number of instances in the cluster. This field is currently immutable [learn more](https://github.com/massdriver-cloud/aws-opensearch/issues/12). Minimum: `1`. Maximum: `80`. Default: `1`.
-    - **`instance_type`** *(string)*: Instance type of **data nodes** in the cluster. This field is immutable [learn more](). Default: `r6gd.xlarge.search`.
+    - **`instance_count`** *(integer)*: Number of instances in the cluster. Minimum: `1`. Maximum: `80`. Default: `1`.
+    - **`instance_type`** *(string)*: Instance type of **data nodes** in the cluster. Default: `r6gd.xlarge.search`.
       - **One of**
         - C6G Compute Optimized Large (2 vCPUs, 4 GiB RAM)
         - C5 Compute Optimized Large (2 vCPUs, 4 GiB RAM)
@@ -116,8 +116,6 @@ Form input parameters for configuring a bundle for deployment.
       - 1.2
       - 1.1
       - 1.0
-- **`security`** *(object)*
-  - **`enable_fgac`** *(boolean)*: **This CANNOT be turned on during the first deployment**. [Fine-grained access control](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html) offers additional ways of controlling access to your data on Amazon OpenSearch Service. Default: `False`.
 ## Examples
 
   ```json

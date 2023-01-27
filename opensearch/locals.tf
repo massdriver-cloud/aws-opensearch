@@ -1,14 +1,37 @@
+resource "random_pet" "domain_name" {
+  length    = 2
+  separator = "-"
+}
+
+resource "random_string" "domain_name_suffix" {
+  # 28 char max for OS domain name, save 1 for the hyphen
+  length  = 28 - length(random_pet.domain_name.id) - 1
+  lower   = true
+  number  = true
+  special = false
+  upper   = false
+}
+
+
 locals {
+  domain_name = "${random_pet.domain_name.id}-${random_string.domain_name_suffix.result}"
+
+  # calculate VPC & subnet types
   vpc_id = element(split("/", var.network.data.infrastructure.arn), 1)
-  subnet_ids = {
+  subnet_ids_by_type = {
     "internal" = [for subnet in var.network.data.infrastructure.internal_subnets : element(split("/", subnet["arn"]), 1)]
     "private"  = [for subnet in var.network.data.infrastructure.private_subnets : element(split("/", subnet["arn"]), 1)]
   }
+  num_subnets_in_vpc       = length(local.selected_subnet_type_ids)
+  selected_subnet_type_ids = local.subnet_ids_by_type[var.networking.subnet_type]
 
-  domain_name                = "${random_string.domain_name_first.result}${random_string.domain_name.result}"
+  # Calculate zone awareness and max subnets
+  # TODO: 2 nodes, but 3 subnets
+  # Max zones supported by OSS = 3, otherwise however many subnets there are
+  max_zone_awareness         = local.num_subnets_in_vpc >= 3 ? 3 : local.num_subnets_in_vpc
   auto_enable_zone_awareness = var.cluster.data_nodes.instance_count > 1
-  even_number_of_nodes       = var.cluster.data_nodes.instance_count % 2 == 0
-  availability_zone_count    = local.auto_enable_zone_awareness ? (local.even_number_of_nodes ? 2 : 3) : 1
+  availability_zone_count    = local.auto_enable_zone_awareness ? local.max_zone_awareness : 1
+  subnet_ids                 = slice(local.selected_subnet_type_ids, 0, local.availability_zone_count)
 
   # data_nodes_instance_class = element(split(".", var.cluster.data_nodes.instance_type), 0)
   # are_instances_gravitron   = length(regexall("g$", local.data_nodes_instance_class)) > 0

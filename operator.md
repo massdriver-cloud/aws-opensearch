@@ -47,7 +47,8 @@ Learn mote about [operational best practices for Amazon OpenSearch Service](http
 * Advanced [security](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/security.html) is enabled.
 * [Auto-Tune](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/auto-tune.html) is enabled to improve cluster speed and stability, with `NO_ROLLBACK` on disable.
 * Only [current generation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/supported-instance-types.html) types are supported.
-* [Zone Awareness](https://aws.amazon.com/premiumsupport/knowledge-center/opensearch-fault-tolerance/) is automatically turned on when the data node instance count > 0. An appropriate number of zones is picked based on your instance size (2 zones for even number of instances, 3 zones for odd number of instances).
+* [Zone Awareness](https://aws.amazon.com/premiumsupport/knowledge-center/opensearch-fault-tolerance/) is automatically turned on when the data node instance count > 1. 2 zones are used for 2 instances, 3 zones are used for 3+ instances.
+* A unique 28 character domain name is automatically created. Custom domains are on our [roadmap](https://github.com/massdriver-cloud/aws-opensearch/issues/5).
 
 ### Caveats
 
@@ -57,6 +58,7 @@ When designing bundles, Massdrivers aims for the 80% use case. If any of the cav
 2. Cold storage, Warm Nodes, and Cognito aren't supported at this time, but are on our roadmap.
 3. No support for T3 Class instances as they frequently time out during provisioning. If you need T3 support, please contact us by clicking the chat icon on your sidebar.
 4. Instance count & type are marked immutable as the Terraform provider doesn't appear to support blue/green deploys. We are tracking this issue [here](https://github.com/massdriver-cloud/aws-opensearch/issues/12).
+5. Authentication is currently only supported using master user/password and [basic auth](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac-walkthrough-basic.html). If you need another authentication type, please comment on this [issue](https://github.com/massdriver-cloud/aws-opensearch/issues/11) and we will prioritize.
 
 ### Additional OpenSearch Resources
 
@@ -64,3 +66,4 @@ When designing bundles, Massdrivers aims for the 80% use case. If any of the cav
 * [Developer Guide](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html)
 * [Instance types](https://instances.vantage.sh/opensearch/)
 * [Pricing](https://aws.amazon.com/opensearch-service/pricing/)
+* [Blue/Green configuration changes in Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html)

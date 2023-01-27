@@ -23,7 +23,6 @@
         "opensearch",
         "cluster",
         "networking",
-        "logging",
-        "security"
+        "logging"
     ]
 }

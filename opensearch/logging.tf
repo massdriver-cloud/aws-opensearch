@@ -2,7 +2,7 @@ resource "aws_cloudwatch_log_group" "main" {
   for_each          = var.logging
   name_prefix       = "/aws/opensearch/${var.md_metadata.name_prefix}/${each.key}/"
   retention_in_days = each.value
-  kms_key_id        = data.aws_kms_alias.opensearch.arn
+  kms_key_id        = data.aws_kms_alias.opensearch.target_key_arn
 }
 
 locals {
@@ -22,8 +22,7 @@ data "aws_iam_policy_document" "opensearch-cloudwatch_policy" {
     resources = local.cloudwatch_resource_arns
 
     principals {
-      # TODO: strip es?
-      identifiers = ["opensearchservice.amazonaws.com", "es.amazonaws.com"]
+      identifiers = ["opensearchservice.amazonaws.com"]
       type        = "Service"
     }
   }

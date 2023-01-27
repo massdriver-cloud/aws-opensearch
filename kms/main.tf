@@ -14,14 +14,17 @@ resource "aws_kms_alias" "opensearch" {
 
 data "aws_iam_policy_document" "kms" {
   statement {
-    sid = "Allow access to Cloudwatch for all log groups provisioned by ${var.md_metadata.name_prefix}"
+    sid       = "Allow access to Cloudwatch for all log groups provisioned by ${var.md_metadata.name_prefix}"
+    effect    = "Allow"
+    resources = ["*"]
+
     principals {
       type = "Service"
       identifiers = [
         "logs.${var.network.specs.aws.region}.amazonaws.com"
       ]
     }
-    effect = "Allow"
+
     actions = [
       "kms:Encrypt*",
       "kms:Decrypt*",
@@ -29,17 +32,15 @@ data "aws_iam_policy_document" "kms" {
       "kms:GenerateDataKey*",
       "kms:Describe*"
     ]
-    resources = ["*"]
 
-    # TODO: too permissive, limit to log group w/ this expected prefix
-    # condition {
-    #   test     = "ArnLike"
-    #   variable = "kms:EncryptionContext:aws:logs:arn"
+    condition {
+      test     = "ArnLike"
+      variable = "kms:EncryptionContext:aws:logs:arn"
 
-    #   values = [
-    #     "arn:aws:logs:${var.network.specs.aws.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/opensearch/${var.md_metadata.name_prefix}/*"
-    #   ]
-    # }
+      values = [
+        "arn:aws:logs:${var.network.specs.aws.region}:${data.aws_caller_identity.current.account_id}:log-group:/aws/opensearch/${var.md_metadata.name_prefix}/*"
+      ]
+    }
   }
 
   statement {

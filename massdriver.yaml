@@ -54,7 +54,6 @@ params:
     - cluster
     - logging
     - networking
-    - security
   properties:
     opensearch:
       required:
@@ -64,7 +63,6 @@ params:
       description: OpenSearch Configuration.
       properties:
         version:
-          $md.immutable: true
           title: Version
           type: string
           default: "OpenSearch_2.3"
@@ -105,17 +103,15 @@ params:
             - instance_count
           properties:
             instance_count:
-              $md.immutable: true
               title: Instance Count
-              description: Number of instances in the cluster. This field is currently immutable [learn more](https://github.com/massdriver-cloud/aws-opensearch/issues/12).
+              description: Number of instances in the cluster.
               type: integer
               default: 1
               minimum: 1
               maximum: 80
             instance_type:
-              $md.immutable: true
               title: Instance Type
-              description: Instance type of **data nodes** in the cluster. This field is immutable [learn more]()
+              description: Instance type of **data nodes** in the cluster.
               type: string
               default: r6gd.xlarge.search
               oneOf:
@@ -335,15 +331,7 @@ params:
             - internal
             - private
           default: internal
-    security:
-      title: Security
-      type: object
-      properties:
-        enable_fgac:
-          title: Fine-Grained Access Control
-          description: "**This CANNOT be turned on during the first deployment**. [Fine-grained access control](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html) offers additional ways of controlling access to your data on Amazon OpenSearch Service."
-          default: false
-          type: boolean
+
 connections:
   required: [network, aws_authentication]
   properties:
@@ -359,7 +347,7 @@ artifacts:
       $ref: massdriver/opensearch-authentication
 
 ui:
-  ui:order: [opensearch, cluster, networking, logging, security]
+  ui:order: [opensearch, cluster, networking, logging]
   cluster:
     ui:order: [master_nodes, data_nodes]
     data_nodes:

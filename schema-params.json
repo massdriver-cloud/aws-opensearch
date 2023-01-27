@@ -59,18 +59,16 @@
                 "data_nodes": {
                     "properties": {
                         "instance_count": {
-                            "$md.immutable": true,
                             "default": 1,
-                            "description": "Number of instances in the cluster. This field is currently immutable [learn more](https://github.com/massdriver-cloud/aws-opensearch/issues/12).",
+                            "description": "Number of instances in the cluster.",
                             "maximum": 80,
                             "minimum": 1,
                             "title": "Instance Count",
                             "type": "integer"
                         },
                         "instance_type": {
-                            "$md.immutable": true,
                             "default": "r6gd.xlarge.search",
-                            "description": "Instance type of **data nodes** in the cluster. This field is immutable [learn more]()",
+                            "description": "Instance type of **data nodes** in the cluster.",
                             "oneOf": [
                                 {
                                     "const": "c6g.large.search",
@@ -414,7 +412,6 @@
             "description": "OpenSearch Configuration.",
             "properties": {
                 "version": {
-                    "$md.immutable": true,
                     "default": "OpenSearch_2.3",
                     "oneOf": [
                         {
@@ -447,26 +444,13 @@
             ],
             "title": "OpenSearch",
             "type": "object"
-        },
-        "security": {
-            "properties": {
-                "enable_fgac": {
-                    "default": false,
-                    "description": "**This CANNOT be turned on during the first deployment**. [Fine-grained access control](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac.html) offers additional ways of controlling access to your data on Amazon OpenSearch Service.",
-                    "title": "Fine-Grained Access Control",
-                    "type": "boolean"
-                }
-            },
-            "title": "Security",
-            "type": "object"
         }
     },
     "required": [
         "opensearch",
         "cluster",
         "logging",
-        "networking",
-        "security"
+        "networking"
     ],
     "title": "aws-opensearch"
 }
