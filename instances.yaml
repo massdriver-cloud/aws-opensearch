@@ -9,6 +9,7 @@ properties:
     default: EBS
 required:
   - instance_storage_type
+  - instance_type
 dependencies:
   instance_storage_type:
     oneOf:
@@ -18,6 +19,15 @@ dependencies:
           instance_type:
             type: string
             enum: [m3.small, m3.large]
+          ebs_options:
+            type: object
+            required: [volume_size, volume_type]
+            properties:
+              volume_size:
+                type: integer
+              volume_type:
+                type: string
+                enum: [gp2, gp3]
       - properties:
           instance_storage_type:
             const: SSD
