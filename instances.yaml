@@ -98,6 +98,22 @@ dependencies:
                 description: "TODO: desc gp2 v gp3"
                 type: string
                 enum: [gp2, gp3]
+            dependencies:
+              volume_type:
+                oneOf:
+                  - properties:
+                      volume_type:
+                        const: gp2
+                  - properties:
+                      volume_type:
+                        const: gp3
+                      iops:
+                        title: IOPS
+                        description: Baseline input/output (I/O) performance of EBS volumes attached to data nodes. The IOPS to volume size ratio should not exceed *500:1*.
+                        type: integer
+                        minimum: 3000
+                        maximum: 16000
+
       - properties:
           instance_storage_type:
             const: SSD
