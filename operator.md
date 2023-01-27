@@ -59,6 +59,7 @@ When designing bundles, Massdrivers aims for the 80% use case. If any of the cav
 3. No support for T3 Class instances as they frequently time out during provisioning. If you need T3 support, please contact us by clicking the chat icon on your sidebar.
 4. Instance count & type are marked immutable as the Terraform provider doesn't appear to support blue/green deploys. We are tracking this issue [here](https://github.com/massdriver-cloud/aws-opensearch/issues/12).
 5. Authentication is currently only supported using master user/password and [basic auth](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/fgac-walkthrough-basic.html). If you need another authentication type, please comment on this [issue](https://github.com/massdriver-cloud/aws-opensearch/issues/11) and we will prioritize.
+6. No support for previous generation volume storage (Provisioned IOPS).
 
 ### Additional OpenSearch Resources
 

@@ -26,7 +26,9 @@ locals {
   selected_subnet_type_ids = local.subnet_ids_by_type[var.networking.subnet_type]
 
   # Calculate zone awareness and max subnets
-  # TODO: 2 nodes, but 3 subnets
+  # TODO: 2 nodes can't run on 3 subnets
+  # -> even nodes, 2 zones
+  # -> odd nodes > 3 zones
   # Max zones supported by OSS = 3, otherwise however many subnets there are
   max_zone_awareness         = local.num_subnets_in_vpc >= 3 ? 3 : local.num_subnets_in_vpc
   auto_enable_zone_awareness = var.cluster.data_nodes.instance_count > 1
