@@ -18,7 +18,64 @@ dependencies:
             const: EBS
           instance_type:
             type: string
-            enum: [m3.small, m3.large]
+            oneOf:
+              - title: C6G Compute Optimized Large (2 vCPUs, 4 GiB RAM)
+                const: c6g.large.search
+              - title: C5 Compute Optimized Large (2 vCPUs, 4 GiB RAM)
+                const: c5.large.search
+              - title: M6G General Purpose Large (2 vCPUs, 8 GiB RAM)
+                const: m6g.large.search
+              - title: M5 General Purpose Large (2 vCPUs, 8 GiB RAM)
+                const: m5.large.search
+              - title: C6G Compute Optimized Extra Large (4 vCPUs, 8 GiB RAM)
+                const: c6g.xlarge.search
+              - title: C5 Compute Optimized Extra Large (4 vCPUs, 8 GiB RAM)
+                const: c5.xlarge.search
+              - title: R5 Memory Optimized Large (2 vCPUs, 16 GiB RAM)
+                const: r5.large.search
+              - title: M6G General Purpose Extra Large (4 vCPUs, 16 GiB RAM)
+                const: m6g.xlarge.search
+              - title: M5 General Purpose Extra Large (4 vCPUs, 16 GiB RAM)
+                const: m5.xlarge.search
+              - title: C6G Compute Optimized Double Extra Large (8 vCPUs, 16 GiB RAM)
+                const: c6g.2xlarge.search
+              - title: C5 Compute Optimized Double Extra Large (8 vCPUs, 16 GiB RAM)
+                const: c5.2xlarge.search
+              - title: R5 Memory Optimized Extra Large (4 vCPUs, 32 GiB RAM)
+                const: r5.xlarge.search
+              - title: M5 General Purpose Double Extra Large (8 vCPUs, 32 GiB RAM)
+                const: m5.2xlarge.search
+              - title: M6G General Purpose Double Extra Large (8 vCPUs, 32 GiB RAM)
+                const: m6g.2xlarge.search
+              - title: C5 Compute Optimized Quadruple Extra Large (16 vCPUs, 32 GiB RAM)
+                const: c5.4xlarge.search
+              - title: C6G Compute Optimized Quadruple Extra Large (16 vCPUs, 32 GiB RAM)
+                const: c6g.4xlarge.search
+              - title: R5 Memory Optimized Double Extra Large (8 vCPUs, 64 GiB RAM)
+                const: r5.2xlarge.search
+              - title: M6G General Purpose Quadruple Extra Large (16 vCPUs, 64 GiB RAM)
+                const: m6g.4xlarge.search
+              - title: M5 General Purpose Quadruple Extra Large (16 vCPUs, 64 GiB RAM)
+                const: m5.4xlarge.search
+              - title: C6G Compute Optimized Eight Extra Large (32 vCPUs, 64 GiB RAM)
+                const: c6g.8xlarge.search
+              - title: C5 Compute Optimized 9xlarge (36 vCPUs, 72 GiB RAM)
+                const: c5.9xlarge.search
+              - title: C6G Compute Optimized 12xlarge Extra Large (48 vCPUs, 96 GiB RAM)
+                const: c6g.12xlarge.search
+              - title: R5 Memory Optimized Quadruple Extra Large (16 vCPUs, 128 GiB RAM)
+                const: r5.4xlarge.search
+              - title: M6G General Purpose Eight Extra Large (32 vCPUs, 128 GiB RAM)
+                const: m6g.8xlarge.search
+              - title: C5 Compute Optimized 18xlarge (72 vCPUs, 144 GiB RAM)
+                const: c5.18xlarge.search
+              - title: M6G General Purpose 12xlarge Extra Large (48 vCPUs, 192 GiB RAM)
+                const: m6g.12xlarge.search
+              - title: M5 General Purpose 12xlarge Extra Large (48 vCPUs, 192 GiB RAM)
+                const: m5.12xlarge.search
+              - title: R5 Memory Optimized 12xlarge Extra Large (48 vCPUs, 384 GiB RAM)
+                const: r5.12xlarge.search
+
           ebs_options:
             type: object
             required: [volume_size, volume_type]
@@ -33,4 +90,30 @@ dependencies:
             const: SSD
           instance_type:
             type: string
-            enum: [m3gd.small, m3gd.large]
+            oneOf:
+              - title: I3 Storage Optimized Large (2 vCPUs, 15.25 GiB RAM)
+                const: i3.large.search
+              - title: R6GD Memory Optimized (NVME SSD) Large (2 vCPUs, 16 GiB RAM)
+                const: r6gd.large.search
+              - title: I3 Storage Optimized Extra Large (4 vCPUs, 30.5 GiB RAM)
+                const: i3.xlarge.search
+              - title: R6GD Memory Optimized (NVME SSD) Extra Large (4 vCPUs, 32 GiB RAM)
+                const: r6gd.xlarge.search
+              - title: I3 Storage Optimized Double Extra Large (8 vCPUs, 61 GiB RAM)
+                const: i3.2xlarge.search
+              - title: R6GD Memory Optimized (NVME SSD) Double Extra Large (8 vCPUs, 64 GiB RAM)
+                const: r6gd.2xlarge.search
+              - title: I3 Storage Optimized Quadruple Extra Large (16 vCPUs, 122 GiB RAM)
+                const: i3.4xlarge.search
+              - title: R6GD Memory Optimized (NVME SSD) Quadruple Extra Large (16 vCPUs, 128 GiB RAM)
+                const: r6gd.4xlarge.search
+              - title: I3 Storage Optimized Eight Extra Large (32 vCPUs, 244 GiB RAM)
+                const: i3.8xlarge.search
+              - title: R6GD Memory Optimized (NVME SSD) Eight Extra Large (32 vCPUs, 256 GiB RAM)
+                const: r6gd.8xlarge.search
+              - title: R6GD Memory Optimized (NVME SSD) 12xlarge Extra Large (48 vCPUs, 384 GiB RAM)
+                const: r6gd.12xlarge.search
+              - title: I3 Storage Optimized 16xlarge Extra Large (64 vCPUs, 488 GiB RAM)
+                const: i3.16xlarge.search
+              - title: R6GD Memory Optimized (NVME SSD) 16xlarge Extra Large (64 vCPUs, 512 GiB RAM)
+                const: r6gd.16xlarge.search
