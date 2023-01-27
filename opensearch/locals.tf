@@ -25,6 +25,8 @@ locals {
   num_subnets_in_vpc       = length(local.selected_subnet_type_ids)
   selected_subnet_type_ids = local.subnet_ids_by_type[var.networking.subnet_type]
 
+  ebs_enabled = var.cluster.data_nodes.instance_storage_type == "EBS"
+
   # Calculate zone awareness and max subnets
   # TODO: 2 nodes can't run on 3 subnets
   # -> even nodes, 2 zones

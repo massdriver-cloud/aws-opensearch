@@ -2,10 +2,14 @@
 type: object
 properties:
   instance_storage_type:
+    title: Instance Storage Type
+    description: TODO
     type: string
-    enum:
-      - EBS
-      - SSD
+    oneOf:
+      - title: EBS - TODO DESC
+        const: EBS
+      - title: SSD- TODO DESC
+        const: SSD
     default: EBS
 required:
   - instance_storage_type
@@ -17,6 +21,8 @@ dependencies:
           instance_storage_type:
             const: EBS
           instance_type:
+            title: Instance Type
+            description: TODO
             type: string
             oneOf:
               - title: C6G Compute Optimized Large (2 vCPUs, 4 GiB RAM)
@@ -75,20 +81,29 @@ dependencies:
                 const: m5.12xlarge.search
               - title: R5 Memory Optimized 12xlarge Extra Large (48 vCPUs, 384 GiB RAM)
                 const: r5.12xlarge.search
-
           ebs_options:
             type: object
+            title: EBS Options
+            description: TODO
             required: [volume_size, volume_type]
             properties:
-              volume_size:
+              volume_size_gib:
+                title: Volume Size
+                description: EBS storage size per node in GiB.
+                minimum: 10
+                maximum: 16384
                 type: integer
               volume_type:
+                title: Volume Type
+                description: "TODO: desc gp2 v gp3"
                 type: string
                 enum: [gp2, gp3]
       - properties:
           instance_storage_type:
             const: SSD
           instance_type:
+            title: Instance Type
+            description: TODO
             type: string
             oneOf:
               - title: I3 Storage Optimized Large (2 vCPUs, 15.25 GiB RAM)
