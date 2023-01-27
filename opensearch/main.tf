@@ -39,13 +39,12 @@ resource "aws_opensearch_domain" "main" {
 
 
   cluster_config {
-    instance_type  = var.cluster.data_nodes.instance_type
-    instance_count = var.cluster.data_nodes.instance_count
-    # TODO:
-    # dedicated_master_count   = var.cluster.master_nodes.enabled ? 3 : null
-    # dedicated_master_enabled = var.cluster.master_nodes.enabled
-    # dedicated_master_type    = local.master_nodes_instance_type
-    zone_awareness_enabled = local.auto_enable_zone_awareness
+    instance_type            = var.cluster.data_nodes.instance_type
+    instance_count           = var.cluster.data_nodes.instance_count
+    dedicated_master_count   = var.cluster.master_nodes.enabled ? 3 : null
+    dedicated_master_enabled = var.cluster.master_nodes.enabled
+    dedicated_master_type    = local.master_nodes_instance_type
+    zone_awareness_enabled   = local.auto_enable_zone_awareness
     zone_awareness_config {
       # Can't set this value if its not enabled, so null in that case.
       availability_zone_count = local.auto_enable_zone_awareness ? local.availability_zone_count : null
