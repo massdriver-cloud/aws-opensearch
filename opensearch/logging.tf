@@ -5,12 +5,6 @@ resource "aws_cloudwatch_log_group" "main" {
   kms_key_id        = data.aws_kms_alias.opensearch.target_key_arn
 }
 
-locals {
-  # TODO: too permissive, compute from var.logging group above
-  cloudwatch_resource_arns = ["arn:aws:logs:*"]
-}
-
-
 data "aws_iam_policy_document" "opensearch-cloudwatch_policy" {
   statement {
     actions = [
@@ -19,7 +13,7 @@ data "aws_iam_policy_document" "opensearch-cloudwatch_policy" {
       "logs:PutLogEventsBatch"
     ]
 
-    resources = local.cloudwatch_resource_arns
+    resources = [for lg in aws_cloudwatch_log_group.main : lg.arn]
 
     principals {
       identifiers = ["opensearchservice.amazonaws.com"]
