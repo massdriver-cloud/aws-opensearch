@@ -1,0 +1,26 @@
+---
+type: object
+properties:
+  instance_storage_type:
+    type: string
+    enum:
+      - EBS
+      - SSD
+    default: EBS
+required:
+  - instance_storage_type
+dependencies:
+  instance_storage_type:
+    oneOf:
+      - properties:
+          instance_storage_type:
+            const: EBS
+          instance_type:
+            type: string
+            enum: [m3.small, m3.large]
+      - properties:
+          instance_storage_type:
+            const: SSD
+          instance_type:
+            type: string
+            enum: [m3gd.small, m3gd.large]

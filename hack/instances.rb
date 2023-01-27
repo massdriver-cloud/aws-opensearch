@@ -14,15 +14,19 @@ ruby hack/instances.rb data
 ruby hack/instances.rb master
 ruby hack/instances.rb warm
 ruby hack/instances.rb data ebs # to filter by ebs only
+ruby hack/instances.rb data ssd # to filter by ssd only
 HELP
   exit 1
 end
 
 type = ARGV[0]
-ebs = ARGV[1]
+subtype = ARGV[1]
+
 
 $supported_instance_classes = {
+  # Filter out t2/3 classes and only use current generate
   "data" => ['c5', 'c6g', 'i3', 'm5', 'm6g', 'r5', 'r6gd'],
+  # Dont generate master, we pick these automatically
   "master" => [],
   "warm" => ['ultrawarm1']
 }
@@ -50,7 +54,15 @@ sorted.each do |entry|
   instance_class = entry["API Name"].split(".").first
   next if !$supported_instance_class.include?(instance_class)
 
-  next if ebs && storage !~ /EBS/
+  if subtype
+    if subtype.downcase == "ebs" && storage != "EBS Only"
+      next
+    end
+
+    if subtype.downcase == "ssd" && storage !~ /SSD/
+      next
+    end
+  end
 
   options << {
     "title" => "#{name} (#{cpus}, #{memory} RAM)",
