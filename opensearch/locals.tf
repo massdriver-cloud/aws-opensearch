@@ -26,6 +26,15 @@ locals {
   selected_subnet_type_ids = local.subnet_ids_by_type[var.networking.subnet_type]
 
   ebs_enabled = var.cluster.data_nodes.instance_storage_type == "EBS"
+  ebs_options = local.ebs_enabled ? var.cluster.data_nodes["ebs_options"] : lookup(var.cluster.data_nodes, "ebs_options", {
+    volume_size_gib = null
+    volume_type     = null
+  })
+
+  ebs_gp3_options = local.ebs_enabled && local.ebs_options.volume_type == "gp3" ? var.cluster.data_nodes["ebs_options"] : {
+    iops       = null
+    throughput = null
+  }
 
   # Calculate zone awareness and max subnets
   # TODO: 2 nodes can't run on 3 subnets

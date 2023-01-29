@@ -7,16 +7,18 @@ resource "aws_cloudwatch_log_group" "main" {
 
 data "aws_iam_policy_document" "opensearch-cloudwatch_policy" {
   statement {
-    actions = [
-      "logs:CreateLogStream",
-      "logs:PutLogEvents",
-      "logs:PutLogEventsBatch"
-    ]
+    # TODO: restrict
+    # actions = ["logs:CreateLogStream", "logs:PutLogEvents", "logs:PutLogEventsBatch"]
+    actions = ["logs:*"]
 
-    resources = [for lg in aws_cloudwatch_log_group.main : lg.arn]
+    # TODO: restrict
+    # resources = [for lg in aws_cloudwatch_log_group.main : lg.arn]
+    resources = ["*"]
 
     principals {
-      identifiers = ["opensearchservice.amazonaws.com"]
+      # TODO: restrict
+      # identifiers = ["opensearchservice.amazonaws.com"]
+      identifiers = ["opensearchservice.amazonaws.com", "es.amazonaws.com"]
       type        = "Service"
     }
   }

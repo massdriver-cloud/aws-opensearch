@@ -1,9 +1,19 @@
 {
     "cluster": {
         "data_nodes": {
+            "ebs_options": {
+                "ui:order": [
+                    "volume_size_gib",
+                    "volume_type",
+                    "iops",
+                    "throughput"
+                ]
+            },
             "ui:order": [
+                "instance_storage_type",
                 "instance_type",
-                "instance_count"
+                "instance_count",
+                "ebs_options"
             ]
         },
         "ui:order": [

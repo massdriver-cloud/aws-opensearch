@@ -100,6 +100,7 @@ params:
           type: object
           required:
             - instance_type
+            - instance_storage_type
             - instance_count
           properties:
             instance_count:
@@ -109,94 +110,154 @@ params:
               default: 1
               minimum: 1
               maximum: 80
-            instance_type:
-              title: Instance Type
-              description: Instance type of **data nodes** in the cluster.
+            instance_storage_type:
+              title: Instance Storage Type
+              description: Storage type for workloads. This will effect the available instances types.
               type: string
-              default: r6gd.xlarge.search
               oneOf:
-                - title: C6G Compute Optimized Large (2 vCPUs, 4 GiB RAM)
-                  const: c6g.large.search
-                - title: C5 Compute Optimized Large (2 vCPUs, 4 GiB RAM)
-                  const: c5.large.search
-                - title: M6G General Purpose Large (2 vCPUs, 8 GiB RAM)
-                  const: m6g.large.search
-                - title: M5 General Purpose Large (2 vCPUs, 8 GiB RAM)
-                  const: m5.large.search
-                - title: C6G Compute Optimized Extra Large (4 vCPUs, 8 GiB RAM)
-                  const: c6g.xlarge.search
-                - title: C5 Compute Optimized Extra Large (4 vCPUs, 8 GiB RAM)
-                  const: c5.xlarge.search
-                - title: I3 Storage Optimized Large (2 vCPUs, 15.25 GiB RAM)
-                  const: i3.large.search
-                - title: R5 Memory Optimized Large (2 vCPUs, 16 GiB RAM)
-                  const: r5.large.search
-                - title: R6GD Memory Optimized (NVME SSD) Large (2 vCPUs, 16 GiB RAM)
-                  const: r6gd.large.search
-                - title: M6G General Purpose Extra Large (4 vCPUs, 16 GiB RAM)
-                  const: m6g.xlarge.search
-                - title: M5 General Purpose Extra Large (4 vCPUs, 16 GiB RAM)
-                  const: m5.xlarge.search
-                - title: C6G Compute Optimized Double Extra Large (8 vCPUs, 16 GiB RAM)
-                  const: c6g.2xlarge.search
-                - title: C5 Compute Optimized Double Extra Large (8 vCPUs, 16 GiB RAM)
-                  const: c5.2xlarge.search
-                - title: I3 Storage Optimized Extra Large (4 vCPUs, 30.5 GiB RAM)
-                  const: i3.xlarge.search
-                - title: R5 Memory Optimized Extra Large (4 vCPUs, 32 GiB RAM)
-                  const: r5.xlarge.search
-                - title: R6GD Memory Optimized (NVME SSD) Extra Large (4 vCPUs, 32 GiB RAM)
-                  const: r6gd.xlarge.search
-                - title: M5 General Purpose Double Extra Large (8 vCPUs, 32 GiB RAM)
-                  const: m5.2xlarge.search
-                - title: M6G General Purpose Double Extra Large (8 vCPUs, 32 GiB RAM)
-                  const: m6g.2xlarge.search
-                - title: C5 Compute Optimized Quadruple Extra Large (16 vCPUs, 32 GiB RAM)
-                  const: c5.4xlarge.search
-                - title: C6G Compute Optimized Quadruple Extra Large (16 vCPUs, 32 GiB RAM)
-                  const: c6g.4xlarge.search
-                - title: I3 Storage Optimized Double Extra Large (8 vCPUs, 61 GiB RAM)
-                  const: i3.2xlarge.search
-                - title: R5 Memory Optimized Double Extra Large (8 vCPUs, 64 GiB RAM)
-                  const: r5.2xlarge.search
-                - title: R6GD Memory Optimized (NVME SSD) Double Extra Large (8 vCPUs, 64 GiB RAM)
-                  const: r6gd.2xlarge.search
-                - title: M6G General Purpose Quadruple Extra Large (16 vCPUs, 64 GiB RAM)
-                  const: m6g.4xlarge.search
-                - title: M5 General Purpose Quadruple Extra Large (16 vCPUs, 64 GiB RAM)
-                  const: m5.4xlarge.search
-                - title: C6G Compute Optimized Eight Extra Large (32 vCPUs, 64 GiB RAM)
-                  const: c6g.8xlarge.search
-                - title: C5 Compute Optimized 9xlarge (36 vCPUs, 72 GiB RAM)
-                  const: c5.9xlarge.search
-                - title: C6G Compute Optimized 12xlarge Extra Large (48 vCPUs, 96 GiB RAM)
-                  const: c6g.12xlarge.search
-                - title: I3 Storage Optimized Quadruple Extra Large (16 vCPUs, 122 GiB RAM)
-                  const: i3.4xlarge.search
-                - title: R5 Memory Optimized Quadruple Extra Large (16 vCPUs, 128 GiB RAM)
-                  const: r5.4xlarge.search
-                - title: R6GD Memory Optimized (NVME SSD) Quadruple Extra Large (16 vCPUs, 128 GiB RAM)
-                  const: r6gd.4xlarge.search
-                - title: M6G General Purpose Eight Extra Large (32 vCPUs, 128 GiB RAM)
-                  const: m6g.8xlarge.search
-                - title: C5 Compute Optimized 18xlarge (72 vCPUs, 144 GiB RAM)
-                  const: c5.18xlarge.search
-                - title: M6G General Purpose 12xlarge Extra Large (48 vCPUs, 192 GiB RAM)
-                  const: m6g.12xlarge.search
-                - title: M5 General Purpose 12xlarge Extra Large (48 vCPUs, 192 GiB RAM)
-                  const: m5.12xlarge.search
-                - title: I3 Storage Optimized Eight Extra Large (32 vCPUs, 244 GiB RAM)
-                  const: i3.8xlarge.search
-                - title: R6GD Memory Optimized (NVME SSD) Eight Extra Large (32 vCPUs, 256 GiB RAM)
-                  const: r6gd.8xlarge.search
-                - title: R5 Memory Optimized 12xlarge Extra Large (48 vCPUs, 384 GiB RAM)
-                  const: r5.12xlarge.search
-                - title: R6GD Memory Optimized (NVME SSD) 12xlarge Extra Large (48 vCPUs, 384 GiB RAM)
-                  const: r6gd.12xlarge.search
-                - title: I3 Storage Optimized 16xlarge Extra Large (64 vCPUs, 488 GiB RAM)
-                  const: i3.16xlarge.search
-                - title: R6GD Memory Optimized (NVME SSD) 16xlarge Extra Large (64 vCPUs, 512 GiB RAM)
-                  const: r6gd.16xlarge.search
+                - title: EBS - Elastic Block Store
+                  const: EBS
+                - title: SSD/NVMe - Non-Volatile Memory Express
+                  const: SSD
+              default: EBS
+          dependencies:
+            instance_storage_type:
+              oneOf:
+                - properties:
+                    instance_storage_type:
+                      const: EBS
+                    instance_type:
+                      title: Instance Type
+                      type: string
+                      oneOf:
+                        - title: 2 vCPUs, 4 GiB RAM, EBS Only (c6g.large.search)
+                          const: c6g.large.search
+                        - title: 2 vCPUs, 4 GiB RAM, EBS Only (c5.large.search)
+                          const: c5.large.search
+                        - title: 2 vCPUs, 8 GiB RAM, EBS Only (m6g.large.search)
+                          const: m6g.large.search
+                        - title: 2 vCPUs, 8 GiB RAM, EBS Only (m5.large.search)
+                          const: m5.large.search
+                        - title: 4 vCPUs, 8 GiB RAM, EBS Only (c6g.xlarge.search)
+                          const: c6g.xlarge.search
+                        - title: 4 vCPUs, 8 GiB RAM, EBS Only (c5.xlarge.search)
+                          const: c5.xlarge.search
+                        - title: 2 vCPUs, 16 GiB RAM, EBS Only (r5.large.search)
+                          const: r5.large.search
+                        - title: 4 vCPUs, 16 GiB RAM, EBS Only (m6g.xlarge.search)
+                          const: m6g.xlarge.search
+                        - title: 4 vCPUs, 16 GiB RAM, EBS Only (m5.xlarge.search)
+                          const: m5.xlarge.search
+                        - title: 8 vCPUs, 16 GiB RAM, EBS Only (c6g.2xlarge.search)
+                          const: c6g.2xlarge.search
+                        - title: 8 vCPUs, 16 GiB RAM, EBS Only (c5.2xlarge.search)
+                          const: c5.2xlarge.search
+                        - title: 4 vCPUs, 32 GiB RAM, EBS Only (r5.xlarge.search)
+                          const: r5.xlarge.search
+                        - title: 8 vCPUs, 32 GiB RAM, EBS Only (m5.2xlarge.search)
+                          const: m5.2xlarge.search
+                        - title: 8 vCPUs, 32 GiB RAM, EBS Only (m6g.2xlarge.search)
+                          const: m6g.2xlarge.search
+                        - title: 16 vCPUs, 32 GiB RAM, EBS Only (c5.4xlarge.search)
+                          const: c5.4xlarge.search
+                        - title: 16 vCPUs, 32 GiB RAM, EBS Only (c6g.4xlarge.search)
+                          const: c6g.4xlarge.search
+                        - title: 8 vCPUs, 64 GiB RAM, EBS Only (r5.2xlarge.search)
+                          const: r5.2xlarge.search
+                        - title: 16 vCPUs, 64 GiB RAM, EBS Only (m6g.4xlarge.search)
+                          const: m6g.4xlarge.search
+                        - title: 16 vCPUs, 64 GiB RAM, EBS Only (m5.4xlarge.search)
+                          const: m5.4xlarge.search
+                        - title: 32 vCPUs, 64 GiB RAM, EBS Only (c6g.8xlarge.search)
+                          const: c6g.8xlarge.search
+                        - title: 36 vCPUs, 72 GiB RAM, EBS Only (c5.9xlarge.search)
+                          const: c5.9xlarge.search
+                        - title: 48 vCPUs, 96 GiB RAM, EBS Only (c6g.12xlarge.search)
+                          const: c6g.12xlarge.search
+                        - title: 16 vCPUs, 128 GiB RAM, EBS Only (r5.4xlarge.search)
+                          const: r5.4xlarge.search
+                        - title: 32 vCPUs, 128 GiB RAM, EBS Only (m6g.8xlarge.search)
+                          const: m6g.8xlarge.search
+                        - title: 72 vCPUs, 144 GiB RAM, EBS Only (c5.18xlarge.search)
+                          const: c5.18xlarge.search
+                        - title: 48 vCPUs, 192 GiB RAM, EBS Only (m6g.12xlarge.search)
+                          const: m6g.12xlarge.search
+                        - title: 48 vCPUs, 192 GiB RAM, EBS Only (m5.12xlarge.search)
+                          const: m5.12xlarge.search
+                        - title: 48 vCPUs, 384 GiB RAM, EBS Only (r5.12xlarge.search)
+                          const: r5.12xlarge.search
+                    ebs_options:
+                      type: object
+                      title: EBS Options
+                      description: Elastic block storage options
+                      required: [volume_size_gib, volume_type]
+                      properties:
+                        volume_size_gib:
+                          title: Volume Size (GiB)
+                          description: EBS storage size per node in GiB.
+                          minimum: 10
+                          maximum: 16384
+                          type: integer
+                        volume_type:
+                          title: Volume Type
+                          description: GP2 SSDs automatically scale IOPS linearly with size. GP3 is more cost effective and provides additional options for fine tuning.
+                          type: string
+                          enum: [gp2, gp3]
+                      dependencies:
+                        volume_type:
+                          oneOf:
+                            - properties:
+                                volume_type:
+                                  const: gp2
+                            - properties:
+                                volume_type:
+                                  const: gp3
+                                iops:
+                                  title: IOPS
+                                  description: Baseline input/output (I/O) performance of EBS volumes attached to data nodes. _The IOPS to volume size ratio should not exceed *500:1*._
+                                  type: integer
+                                  minimum: 3000
+                                  maximum: 16000
+                                throughput:
+                                  title: Throughput (MiB/s)
+                                  description: Specifies the throughput (in MiB/s) of the EBS volumes attached to data nodes. _The Throughput to IOPS ratio should not exceed *1:4*._
+                                  type: integer
+                                  minimum: 125
+                                  maximum: 1000
+                - properties:
+                    instance_storage_type:
+                      const: SSD
+                    instance_type:
+                      title: Instance Type
+                      type: string
+                      oneOf:
+                        - title: 2 vCPUs, 15.25 GiB RAM, 1 x 475 NVMe SSD (i3.large.search)
+                          const: i3.large.search
+                        - title: 2 vCPUs, 16 GiB RAM, 1 x 118 NVMe SSD (r6gd.large.search)
+                          const: r6gd.large.search
+                        - title: 4 vCPUs, 30.5 GiB RAM, 1 x 950 NVMe SSD (i3.xlarge.search)
+                          const: i3.xlarge.search
+                        - title: 4 vCPUs, 32 GiB RAM, 1 x 237 NVMe SSD (r6gd.xlarge.search)
+                          const: r6gd.xlarge.search
+                        - title: 8 vCPUs, 61 GiB RAM, 1 x 1900 NVMe SSD (i3.2xlarge.search)
+                          const: i3.2xlarge.search
+                        - title: 8 vCPUs, 64 GiB RAM, 1 x 475 NVMe SSD (r6gd.2xlarge.search)
+                          const: r6gd.2xlarge.search
+                        - title: 16 vCPUs, 122 GiB RAM, 2 x 1900 NVMe SSD (i3.4xlarge.search)
+                          const: i3.4xlarge.search
+                        - title: 16 vCPUs, 128 GiB RAM, 1 x 950 NVMe SSD (r6gd.4xlarge.search)
+                          const: r6gd.4xlarge.search
+                        - title: 32 vCPUs, 244 GiB RAM, 4 x 1900 NVMe SSD (i3.8xlarge.search)
+                          const: i3.8xlarge.search
+                        - title: 32 vCPUs, 256 GiB RAM, 1 x 1900 NVMe SSD (r6gd.8xlarge.search)
+                          const: r6gd.8xlarge.search
+                        - title: 48 vCPUs, 384 GiB RAM, 2 x 1425 NVMe SSD (r6gd.12xlarge.search)
+                          const: r6gd.12xlarge.search
+                        - title: 64 vCPUs, 488 GiB RAM, 8 x 1900 NVMe SSD (i3.16xlarge.search)
+                          const: i3.16xlarge.search
+                        - title: 64 vCPUs, 512 GiB RAM, 2 x 1900 NVMe SSD (r6gd.16xlarge.search)
+                          const: r6gd.16xlarge.search
+
     logging:
       type: object
       title: Logging
@@ -351,7 +412,10 @@ ui:
   cluster:
     ui:order: [master_nodes, data_nodes]
     data_nodes:
-      ui:order: [instance_type, instance_count]
+      ui:order:
+        [instance_storage_type, instance_type, instance_count, ebs_options]
+      ebs_options:
+        ui:order: [volume_size_gib, volume_type, iops, throughput]
   logging:
     ui:order:
       - index_slow_logs

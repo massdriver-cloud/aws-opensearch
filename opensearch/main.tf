@@ -95,17 +95,11 @@ resource "aws_opensearch_domain" "main" {
     }
   }
 
-  # # Can you ebs w/ nvme? NO
-  # # gp2, gp3
-
-  # ebs_options {
-  #   ebs_enabled = true
-  #   volume_size - (Required if ebs_enabled is set to true.) Size of EBS volumes attached to data nodes (in GiB).
-
-  #   volume_type - (Optional) Type of EBS volumes attached to data nodes.
-  #   # TODO:
-  #   # iops - (Optional) Baseline input/output (I/O) performance of EBS volumes attached to data nodes. Applicable only for the GP3 and Provisioned IOPS EBS volume types.
-  #   # throughput - (Required if volume_type is set to gp3) Specifies the throughput (in MiB/s) of the EBS volumes attached to data nodes. Applicable only for the gp3 volume type. Valid values are between 125 and 1000.
-
-  # }
+  ebs_options {
+    ebs_enabled = local.ebs_enabled
+    volume_size = local.ebs_options.volume_size_gib
+    volume_type = local.ebs_options.volume_type
+    iops        = local.ebs_gp3_options.iops
+    throughput  = local.ebs_gp3_options.throughput
+  }
 }

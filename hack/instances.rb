@@ -50,8 +50,9 @@ sorted.each do |entry|
   cpus = entry["vCPUs"]
   memory = entry["Memory"]
   storage = entry["Storage"]
-
+  instance_type = entry["API Name"]
   instance_class = entry["API Name"].split(".").first
+
   next if !$supported_instance_class.include?(instance_class)
 
   if subtype
@@ -65,7 +66,7 @@ sorted.each do |entry|
   end
 
   options << {
-    "title" => "#{name} (#{cpus}, #{memory} RAM)",
+    "title" => "#{cpus}, #{memory} RAM, #{storage} (#{instance_type})",
     "const" => entry["API Name"] # instance name
   }
 end

@@ -3,6 +3,10 @@ TAG=release-$(shell date +%s)
 # NOTE: this is a temporary file, this will be baked into the cli down the road.
 .PHONY: plan
 
+clean: ## Cleans generated files
+	rm -f */_params.auto.tfvars.json
+	rm -f */{_connections_variables.tf.json,_md_variables.tf.json,_params_variables.tf.json}
+
 plan: ## Plans all examples
 	mass bundle build
 	ruby ./tf_helper.rb plan | bash
@@ -22,7 +26,7 @@ release:
 	gh release create ${TAG} --generate-notes --draft
 
 .PHONY: build
-build:
+build: clean
 	mass bundle build
 	cd kms && terraform fmt && terraform init  && terraform validate
 	cd service_linked_role && terraform fmt && terraform init && terraform validate
