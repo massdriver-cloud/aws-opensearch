@@ -84,8 +84,13 @@ Form input parameters for configuring a bundle for deployment.
       "__name": "Development",
       "cluster": {
           "data_nodes": {
+              "ebs_options": {
+                  "volume_size_gib": 10,
+                  "volume_type": "gp2"
+              },
               "instance_count": 1,
-              "instance_type": "r6gd.large.search"
+              "instance_storage_type": "EBS",
+              "instance_type": "m6g.large.search"
           },
           "master_nodes": {
               "enabled": false
@@ -112,7 +117,8 @@ Form input parameters for configuring a bundle for deployment.
       "cluster": {
           "data_nodes": {
               "instance_count": 3,
-              "instance_type": "r6gd.large.search"
+              "instance_storage_type": "SSD",
+              "instance_type": "r6gd.xlarge.search"
           },
           "master_nodes": {
               "enabled": true

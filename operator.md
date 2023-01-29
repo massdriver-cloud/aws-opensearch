@@ -47,7 +47,7 @@ Learn mote about [operational best practices for Amazon OpenSearch Service](http
 * Advanced [security](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/security.html) is enabled.
 * [Auto-Tune](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/auto-tune.html) is enabled to improve cluster speed and stability, with `NO_ROLLBACK` on disable.
 * Only [current generation](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/supported-instance-types.html) types are supported.
-* [Zone Awareness](https://aws.amazon.com/premiumsupport/knowledge-center/opensearch-fault-tolerance/) is automatically turned on when the data node instance count > 1. 2 zones are used for 2 instances, 3 zones are used for 3+ instances.
+* [Zone Awareness](https://aws.amazon.com/premiumsupport/knowledge-center/opensearch-fault-tolerance/) is automatically turned on when the data node instance count > 1. 2 zones are used for an even number of instances, 3 zones for an odd number of instances.
 * A unique 28 character domain name is automatically created. Custom domains are on our [roadmap](https://github.com/massdriver-cloud/aws-opensearch/issues/5).
 
 ### Caveats

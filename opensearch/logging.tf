@@ -7,18 +7,20 @@ resource "aws_cloudwatch_log_group" "main" {
 
 data "aws_iam_policy_document" "opensearch-cloudwatch_policy" {
   statement {
-    # TODO: restrict
-    # actions = ["logs:CreateLogStream", "logs:PutLogEvents", "logs:PutLogEventsBatch"]
-    actions = ["logs:*"]
+    actions = ["logs:CreateLogStream", "logs:PutLogEvents", "logs:PutLogEventsBatch"]
 
-    # TODO: restrict
-    # resources = [for lg in aws_cloudwatch_log_group.main : lg.arn]
-    resources = ["*"]
+    # TODO: restrict:
+    # Note this is a service level IAM policy... so changing this will effect
+    # other clusters in this account.
+    # If another cluster has given "*"... restricting this may show a false positive,
+    # but it only works becasue another cluster gave loose permissions...
+    resources = ["arn:aws:logs:*"]
+
+    # Try this on a cluster w/ no others deployed to see if it works...
+    # resources = [for lg in aws_cloudwatch_log_group.main : "${lg.arn}:*"]
 
     principals {
-      # TODO: restrict
-      # identifiers = ["opensearchservice.amazonaws.com"]
-      identifiers = ["opensearchservice.amazonaws.com", "es.amazonaws.com"]
+      identifiers = ["opensearchservice.amazonaws.com"]
       type        = "Service"
     }
   }

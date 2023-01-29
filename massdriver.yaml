@@ -22,8 +22,12 @@ params:
         version: OpenSearch_2.3
       cluster:
         data_nodes:
-          instance_type: r6gd.large.search
+          instance_storage_type: EBS
+          instance_type: m6g.large.search
           instance_count: 1
+          ebs_options:
+            volume_size_gib: 10
+            volume_type: gp2
         master_nodes:
           enabled: false
       logging:
@@ -38,7 +42,8 @@ params:
         version: OpenSearch_2.3
       cluster:
         data_nodes:
-          instance_type: r6gd.large.search
+          instance_storage_type: SSD
+          instance_type: r6gd.xlarge.search
           instance_count: 3
         master_nodes:
           enabled: true

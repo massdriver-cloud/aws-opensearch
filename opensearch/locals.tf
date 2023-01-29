@@ -41,8 +41,8 @@ locals {
   # -> even nodes, 2 zones
   # -> odd nodes > 3 zones
   # Max zones supported by OSS = 3, otherwise however many subnets there are
-  max_zone_awareness         = local.num_subnets_in_vpc >= 3 ? 3 : local.num_subnets_in_vpc
   auto_enable_zone_awareness = var.cluster.data_nodes.instance_count > 1
+  max_zone_awareness         = var.cluster.data_nodes.instance_count % 2 == 0 ? 2 : 3
   availability_zone_count    = local.auto_enable_zone_awareness ? local.max_zone_awareness : 1
   subnet_ids                 = slice(local.selected_subnet_type_ids, 0, local.availability_zone_count)
 
