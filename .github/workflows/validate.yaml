@@ -35,20 +35,20 @@ jobs:
       - name: Validate artifacts schema
         run: mass schema validate -s https://json-schema.org/draft-07/schema -d ./schema-artifacts.json
 
-      - name: Terraform validate
+      - name: Terraform validate (kms)
         uses: dflook/terraform-validate@v1
-        id: validate-kms
+        id: validate
         with:
           path: kms
 
-      - name: Terraform validate
+      - name: Terraform validate (service_linked_role)
         uses: dflook/terraform-validate@v1
-        id: validate-kms
+        id: validate
         with:
           path: service_linked_role
 
-      - name: Terraform validate
+      - name: Terraform validate (opensearch)
         uses: dflook/terraform-validate@v1
-        id: validate-opensearch
+        id: validate
         with:
           path: opensearch
