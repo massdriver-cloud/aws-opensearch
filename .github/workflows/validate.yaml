@@ -37,6 +37,18 @@ jobs:
 
       - name: Terraform validate
         uses: dflook/terraform-validate@v1
-        id: validate
+        id: validate-kms
         with:
-          path: src
+          path: kms
+
+      - name: Terraform validate
+        uses: dflook/terraform-validate@v1
+        id: validate-kms
+        with:
+          path: service_linked_role
+
+      - name: Terraform validate
+        uses: dflook/terraform-validate@v1
+        id: validate-opensearch
+        with:
+          path: opensearch

@@ -14,10 +14,10 @@ data "aws_iam_policy_document" "opensearch-cloudwatch_policy" {
     # other clusters in this account.
     # If another cluster has given "*"... restricting this may show a false positive,
     # but it only works becasue another cluster gave loose permissions...
-    resources = ["arn:aws:logs:*"]
+    # resources = ["arn:aws:logs:*"]
 
     # Try this on a cluster w/ no others deployed to see if it works...
-    # resources = [for lg in aws_cloudwatch_log_group.main : "${lg.arn}:*"]
+    resources = [for lg in aws_cloudwatch_log_group.main : "${lg.arn}:*"]
 
     principals {
       identifiers = ["opensearchservice.amazonaws.com"]
