@@ -336,7 +336,7 @@ Resources created by this bundle that can be connected to other bundles.
       - **Any of**
         - AWS Security information*object*: Informs downstream services of network and/or IAM policies. Cannot contain additional properties.
           - **`iam`** *(object)*: IAM Policies. Cannot contain additional properties.
-            - **`^[a-z-/]+$`** *(object)*
+            - **`^[a-z]+[a-z_]*[a-z]+$`** *(object)*
               - **`policy_arn`** *(string)*: AWS IAM policy ARN.
 
                 Examples:
@@ -376,14 +376,6 @@ Resources created by this bundle that can be connected to other bundles.
               - **`port`** *(integer)*: Port number. Minimum: `0`. Maximum: `65535`.
               - **`protocol`** *(string)*: Must be one of: `['tcp', 'udp']`.
   - **`specs`** *(object)*: Cannot contain additional properties.
-    - **`aws`** *(object)*: .
-      - **`region`** *(string)*: AWS Region to provision in.
-
-        Examples:
-        ```json
-        "us-west-2"
-        ```
-
     - **`opensearch`** *(object)*
       - **`version`** *(string)*: Default: ``.
 
