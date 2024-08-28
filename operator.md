@@ -2,6 +2,18 @@
 
 Amazon OpenSearch Service is a managed service that makes it easy to deploy, operate, and scale OpenSearch clusters in the cloud. OpenSearch is a distributed search and analytics suite derived from Elasticsearch. The service provides operational tools and security configurations, enabling users to perform searches on large amounts of data without the need to manage the underlying infrastructure.
 
+### Use Cases
+
+**E-commerce search**: OpenSearch can be used to provide search functionality for e-commerce websites, where customers can search for products by keyword, category, or other attributes. With OpenSearch, you can create complex search queries that take into account factors such as price, availability, and popularity. Additionally, OpenSearch's faceting capabilities allow users to narrow down search results by attributes such as brand, color, and price range.
+
+**Log analysis**: OpenSearch is commonly used for log analysis, which involves collecting, parsing, and analyzing log data. With OpenSearch, you can quickly and easily search through large volumes of log data to find specific events or patterns. OpenSearch also allows you to create alerts and notifications based on certain conditions, such as when a specific error occurs in the logs.
+
+**Business intelligence and analytics**: OpenSearch can be used as a data store for business intelligence and analytics applications. It allows you to easily index and query large amounts of data, and its aggregation capabilities make it well-suited for creating data visualizations and dashboards. Additionally, its real-time search capabilities allow for near real-time data analysis.
+
+**Geo-location search**: OpenSearch has built-in support for geo-location data, which makes it well-suited for applications that involve searching for data based on location. For example, it can be used to build a location-based search engine for finding nearby restaurants, hotels, or shops. It can also be used to analyze location-based data, such as tracking the movement of vehicles or people.
+
+**Real-time monitoring and anomaly detection**: OpenSearch can be used to monitor and analyze real-time data streams, such as sensor data or social media feeds. Its real-time search capabilities make it well-suited for detecting anomalies or patterns in the data. It can be used to detect equipment failures in an industrial setting, or to monitor social media sentiment in real-time.
+
 ### Design Decisions
 
 1. **KMS Encryption**: The module provisions a KMS key specifically for encrypting OpenSearch data.
@@ -12,7 +24,7 @@ Amazon OpenSearch Service is a managed service that makes it easy to deploy, ope
 6. **Zone Awareness**: Automatic zone awareness enabled for high availability.
 7. **Logging**: Configures log groups in CloudWatch for monitoring and troubleshooting.
 
-### Runbook
+## Runbook
 
 #### Unable to Access OpenSearch Cluster
 
@@ -94,3 +106,10 @@ aws sts assume-role --role-arn <your-role-arn> --role-session-name AWSCLI-Sessio
 
 Ensure the IAM role can be assumed correctly. Check the response for credentials and confirm that the role is set up correctly with the necessary policies.
 
+## Additional OpenSearch Resources
+
+* [Home Page](https://opensearch.org/)
+* [Developer Guide](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html)
+* [Instance types](https://instances.vantage.sh/opensearch/)
+* [Pricing](https://aws.amazon.com/opensearch-service/pricing/)
+* [Blue/Green configuration changes in Amazon OpenSearch Service](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/managedomains-configuration-changes.html)
