@@ -108,7 +108,7 @@ Ensure the IAM role can be assumed correctly. Check the response for credentials
 
 ## Additional OpenSearch Resources
 
-* [Home Page](https://opensearch.org/)
+* [OpenSearch Docs](https://opensearch.org/)
 * [Developer Guide](https://docs.aws.amazon.com/opensearch-service/latest/developerguide/what-is.html)
 * [Instance types](https://instances.vantage.sh/opensearch/)
 * [Pricing](https://aws.amazon.com/opensearch-service/pricing/)
