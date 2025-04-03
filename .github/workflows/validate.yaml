@@ -1,3 +1,5 @@
+# WARNING: This file is managed by: https://github.com/massdriver-cloud/bundle-github-repo-manager
+# DO NOT EDIT HERE. It will be over written.
 name: Validate
 on:
   pull_request:
@@ -26,14 +28,4 @@ jobs:
         uses: dflook/terraform-validate@v1
         id: validate
         with:
-          path: kms
-      - name: Terraform validate
-        uses: dflook/terraform-validate@v1
-        id: validate
-        with:
-          path: opensearch
-      - name: Terraform validate
-        uses: dflook/terraform-validate@v1
-        id: validate
-        with:
-          path: service_linked_role
+          path: src
