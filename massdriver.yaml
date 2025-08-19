@@ -1,68 +1,66 @@
 schema: draft-07
-name: "aws-opensearch"
-description: "Amazon OpenSearch is a managed service that allows you to set up, manage, and scale a search engine for your website or application. It is built on top of Apache Lucene and provides a simple and easy-to-use interface for adding search functionality to your application."
-source_url: github.com/massdriver-cloud/aws-opensearch
-access: private
-type: infrastructure
-
+name: aws-opensearch
+version: 1.0.0
+description: Amazon OpenSearch is a managed service that allows you to set up, manage, and scale a search engine for your website or application. It is built on top of Apache Lucene and provides a simple and easy-to-use interface for adding search functionality to your application.
+source_url: https://github.com/massdriver-cloud/aws-opensearch
+type: application
 steps:
-  - path: service_linked_role
-    provisioner: terraform
-    skip_on_delete: true
-  - path: kms
-    provisioner: terraform
-    skip_on_delete: true
-  - path: opensearch
-    provisioner: terraform
-
+- path: service_linked_role
+  provisioner: opentofu
+  skip_on_delete: true
+- path: kms
+  provisioner: opentofu
+  skip_on_delete: true
+- path: opensearch
+  provisioner: opentofu
 params:
   examples:
-    - __name: Development
-      opensearch:
-        version: OpenSearch_2.3
-      cluster:
-        data_nodes:
-          instance_storage_type: EBS
-          instance_type: m6g.large.search
-          instance_count: 1
-          ebs_options:
-            volume_size_gib: 10
-            volume_type: gp2
-        master_nodes:
-          enabled: false
-      logging:
-        index_slow_logs: 1
-        search_slow_logs: 1
-        es_application_logs: 1
-        audit_logs: 1
-      networking:
-        subnet_type: internal
-    - __name: Production
-      opensearch:
-        version: OpenSearch_2.3
-      cluster:
-        data_nodes:
-          instance_storage_type: SSD
-          instance_type: r6gd.xlarge.search
-          instance_count: 3
-        master_nodes:
-          enabled: true
-      logging:
-        index_slow_logs: 30
-        search_slow_logs: 30
-        es_application_logs: 30
-        audit_logs: 90
-      networking:
-        subnet_type: internal
+  - __name: Development
+    opensearch:
+      version: OpenSearch_2.3
+    cluster:
+      data_nodes:
+        instance_storage_type: EBS
+        instance_type: m6g.large.search
+        instance_count: 1
+        ebs_options:
+          volume_size_gib: 10
+          volume_type: gp2
+      master_nodes:
+        enabled: false
+    logging:
+      index_slow_logs: 1
+      search_slow_logs: 1
+      es_application_logs: 1
+      audit_logs: 1
+    networking:
+      subnet_type: internal
+  - __name: Production
+    opensearch:
+      version: OpenSearch_2.3
+    cluster:
+      data_nodes:
+        instance_storage_type: SSD
+        instance_type: r6gd.xlarge.search
+        instance_count: 3
+      master_nodes:
+        enabled: true
+    logging:
+      index_slow_logs: 30
+      search_slow_logs: 30
+      es_application_logs: 30
+      audit_logs: 90
+    networking:
+      subnet_type: internal
   required:
-    - opensearch
-    - cluster
-    - logging
-    - networking
+  - opensearch
+  - cluster
+  - logging
+  - networking
   properties:
     opensearch:
       required:
-        - version
+      - version
       type: object
       title: OpenSearch
       description: OpenSearch Configuration.
@@ -70,22 +68,22 @@ params:
         version:
           title: Version
           type: string
-          default: "OpenSearch_2.3"
+          default: OpenSearch_2.3
           oneOf:
-            - title: "2.3"
-              const: OpenSearch_2.3
-            - title: "1.3"
-              const: OpenSearch_1.3
-            - title: "1.2"
-              const: OpenSearch_1.2
-            - title: "1.1"
-              const: OpenSearch_1.1
-            - title: "1.0"
-              const: OpenSearch_1.0
+          - title: '2.3'
+            const: OpenSearch_2.3
+          - title: '1.3'
+            const: OpenSearch_1.3
+          - title: '1.2'
+            const: OpenSearch_1.2
+          - title: '1.1'
+            const: OpenSearch_1.1
+          - title: '1.0'
+            const: OpenSearch_1.0
     cluster:
       required:
-        - data_nodes
-        - master_nodes
+      - data_nodes
+      - master_nodes
       type: object
       title: Cluster
       description: Cluster Configuration.
@@ -104,9 +102,9 @@ params:
           title: Data Nodes
           type: object
           required:
-            - instance_type
-            - instance_storage_type
-            - instance_count
+          - instance_type
+          - instance_storage_type
+          - instance_count
           properties:
             instance_count:
               title: Instance Count
@@ -120,310 +118,318 @@ params:
               description: Storage type for workloads. This will effect the available instances types.
               type: string
               oneOf:
-                - title: EBS - Elastic Block Store
-                  const: EBS
-                - title: SSD/NVMe - Non-Volatile Memory Express
-                  const: SSD
+              - title: EBS - Elastic Block Store
+                const: EBS
+              - title: SSD/NVMe - Non-Volatile Memory Express
+                const: SSD
               default: EBS
           dependencies:
             instance_storage_type:
               oneOf:
-                - properties:
-                    instance_storage_type:
-                      const: EBS
-                    instance_type:
-                      title: Instance Type
-                      type: string
-                      oneOf:
-                        - title: 2 vCPUs, 4 GiB RAM, EBS Only (c6g.large.search)
-                          const: c6g.large.search
-                        - title: 2 vCPUs, 4 GiB RAM, EBS Only (c5.large.search)
-                          const: c5.large.search
-                        - title: 2 vCPUs, 8 GiB RAM, EBS Only (m6g.large.search)
-                          const: m6g.large.search
-                        - title: 2 vCPUs, 8 GiB RAM, EBS Only (m5.large.search)
-                          const: m5.large.search
-                        - title: 4 vCPUs, 8 GiB RAM, EBS Only (c6g.xlarge.search)
-                          const: c6g.xlarge.search
-                        - title: 4 vCPUs, 8 GiB RAM, EBS Only (c5.xlarge.search)
-                          const: c5.xlarge.search
-                        - title: 2 vCPUs, 16 GiB RAM, EBS Only (r5.large.search)
-                          const: r5.large.search
-                        - title: 4 vCPUs, 16 GiB RAM, EBS Only (m6g.xlarge.search)
-                          const: m6g.xlarge.search
-                        - title: 4 vCPUs, 16 GiB RAM, EBS Only (m5.xlarge.search)
-                          const: m5.xlarge.search
-                        - title: 8 vCPUs, 16 GiB RAM, EBS Only (c6g.2xlarge.search)
-                          const: c6g.2xlarge.search
-                        - title: 8 vCPUs, 16 GiB RAM, EBS Only (c5.2xlarge.search)
-                          const: c5.2xlarge.search
-                        - title: 4 vCPUs, 32 GiB RAM, EBS Only (r5.xlarge.search)
-                          const: r5.xlarge.search
-                        - title: 8 vCPUs, 32 GiB RAM, EBS Only (m5.2xlarge.search)
-                          const: m5.2xlarge.search
-                        - title: 8 vCPUs, 32 GiB RAM, EBS Only (m6g.2xlarge.search)
-                          const: m6g.2xlarge.search
-                        - title: 16 vCPUs, 32 GiB RAM, EBS Only (c5.4xlarge.search)
-                          const: c5.4xlarge.search
-                        - title: 16 vCPUs, 32 GiB RAM, EBS Only (c6g.4xlarge.search)
-                          const: c6g.4xlarge.search
-                        - title: 8 vCPUs, 64 GiB RAM, EBS Only (r5.2xlarge.search)
-                          const: r5.2xlarge.search
-                        - title: 16 vCPUs, 64 GiB RAM, EBS Only (m6g.4xlarge.search)
-                          const: m6g.4xlarge.search
-                        - title: 16 vCPUs, 64 GiB RAM, EBS Only (m5.4xlarge.search)
-                          const: m5.4xlarge.search
-                        - title: 32 vCPUs, 64 GiB RAM, EBS Only (c6g.8xlarge.search)
-                          const: c6g.8xlarge.search
-                        - title: 36 vCPUs, 72 GiB RAM, EBS Only (c5.9xlarge.search)
-                          const: c5.9xlarge.search
-                        - title: 48 vCPUs, 96 GiB RAM, EBS Only (c6g.12xlarge.search)
-                          const: c6g.12xlarge.search
-                        - title: 16 vCPUs, 128 GiB RAM, EBS Only (r5.4xlarge.search)
-                          const: r5.4xlarge.search
-                        - title: 32 vCPUs, 128 GiB RAM, EBS Only (m6g.8xlarge.search)
-                          const: m6g.8xlarge.search
-                        - title: 72 vCPUs, 144 GiB RAM, EBS Only (c5.18xlarge.search)
-                          const: c5.18xlarge.search
-                        - title: 48 vCPUs, 192 GiB RAM, EBS Only (m6g.12xlarge.search)
-                          const: m6g.12xlarge.search
-                        - title: 48 vCPUs, 192 GiB RAM, EBS Only (m5.12xlarge.search)
-                          const: m5.12xlarge.search
-                        - title: 48 vCPUs, 384 GiB RAM, EBS Only (r5.12xlarge.search)
-                          const: r5.12xlarge.search
-                    ebs_options:
-                      type: object
-                      title: EBS Options
-                      description: Elastic block storage options
-                      required: [volume_size_gib, volume_type]
-                      properties:
-                        volume_size_gib:
-                          title: Volume Size (GiB)
-                          description: EBS storage size per node in GiB.
-                          minimum: 10
-                          maximum: 16384
-                          type: integer
-                        volume_type:
-                          title: Volume Type
-                          description: GP2 SSDs automatically scale IOPS linearly with size. GP3 is more cost effective and provides additional options for fine tuning.
-                          type: string
-                          enum: [gp2, gp3]
-                      dependencies:
-                        volume_type:
-                          oneOf:
-                            - properties:
-                                volume_type:
-                                  const: gp2
-                            - properties:
-                                volume_type:
-                                  const: gp3
-                                iops:
-                                  title: IOPS
-                                  description: Baseline input/output (I/O) performance of EBS volumes attached to data nodes. _The IOPS to volume size ratio should not exceed *500:1*._
-                                  type: integer
-                                  minimum: 3000
-                                  maximum: 16000
-                                throughput:
-                                  title: Throughput (MiB/s)
-                                  description: Specifies the throughput (in MiB/s) of the EBS volumes attached to data nodes. _The Throughput to IOPS ratio should not exceed *1:4*._
-                                  type: integer
-                                  minimum: 125
-                                  maximum: 1000
-                - properties:
-                    instance_storage_type:
-                      const: SSD
-                    instance_type:
-                      title: Instance Type
-                      type: string
-                      oneOf:
-                        - title: 2 vCPUs, 15.25 GiB RAM, 1 x 475 NVMe SSD (i3.large.search)
-                          const: i3.large.search
-                        - title: 2 vCPUs, 16 GiB RAM, 1 x 118 NVMe SSD (r6gd.large.search)
-                          const: r6gd.large.search
-                        - title: 4 vCPUs, 30.5 GiB RAM, 1 x 950 NVMe SSD (i3.xlarge.search)
-                          const: i3.xlarge.search
-                        - title: 4 vCPUs, 32 GiB RAM, 1 x 237 NVMe SSD (r6gd.xlarge.search)
-                          const: r6gd.xlarge.search
-                        - title: 8 vCPUs, 61 GiB RAM, 1 x 1900 NVMe SSD (i3.2xlarge.search)
-                          const: i3.2xlarge.search
-                        - title: 8 vCPUs, 64 GiB RAM, 1 x 475 NVMe SSD (r6gd.2xlarge.search)
-                          const: r6gd.2xlarge.search
-                        - title: 16 vCPUs, 122 GiB RAM, 2 x 1900 NVMe SSD (i3.4xlarge.search)
-                          const: i3.4xlarge.search
-                        - title: 16 vCPUs, 128 GiB RAM, 1 x 950 NVMe SSD (r6gd.4xlarge.search)
-                          const: r6gd.4xlarge.search
-                        - title: 32 vCPUs, 244 GiB RAM, 4 x 1900 NVMe SSD (i3.8xlarge.search)
-                          const: i3.8xlarge.search
-                        - title: 32 vCPUs, 256 GiB RAM, 1 x 1900 NVMe SSD (r6gd.8xlarge.search)
-                          const: r6gd.8xlarge.search
-                        - title: 48 vCPUs, 384 GiB RAM, 2 x 1425 NVMe SSD (r6gd.12xlarge.search)
-                          const: r6gd.12xlarge.search
-                        - title: 64 vCPUs, 488 GiB RAM, 8 x 1900 NVMe SSD (i3.16xlarge.search)
-                          const: i3.16xlarge.search
-                        - title: 64 vCPUs, 512 GiB RAM, 2 x 1900 NVMe SSD (r6gd.16xlarge.search)
-                          const: r6gd.16xlarge.search
-
+              - properties:
+                  instance_storage_type:
+                    const: EBS
+                  instance_type:
+                    title: Instance Type
+                    type: string
+                    oneOf:
+                    - title: 2 vCPUs, 4 GiB RAM, EBS Only (c6g.large.search)
+                      const: c6g.large.search
+                    - title: 2 vCPUs, 4 GiB RAM, EBS Only (c5.large.search)
+                      const: c5.large.search
+                    - title: 2 vCPUs, 8 GiB RAM, EBS Only (m6g.large.search)
+                      const: m6g.large.search
+                    - title: 2 vCPUs, 8 GiB RAM, EBS Only (m5.large.search)
+                      const: m5.large.search
+                    - title: 4 vCPUs, 8 GiB RAM, EBS Only (c6g.xlarge.search)
+                      const: c6g.xlarge.search
+                    - title: 4 vCPUs, 8 GiB RAM, EBS Only (c5.xlarge.search)
+                      const: c5.xlarge.search
+                    - title: 2 vCPUs, 16 GiB RAM, EBS Only (r5.large.search)
+                      const: r5.large.search
+                    - title: 4 vCPUs, 16 GiB RAM, EBS Only (m6g.xlarge.search)
+                      const: m6g.xlarge.search
+                    - title: 4 vCPUs, 16 GiB RAM, EBS Only (m5.xlarge.search)
+                      const: m5.xlarge.search
+                    - title: 8 vCPUs, 16 GiB RAM, EBS Only (c6g.2xlarge.search)
+                      const: c6g.2xlarge.search
+                    - title: 8 vCPUs, 16 GiB RAM, EBS Only (c5.2xlarge.search)
+                      const: c5.2xlarge.search
+                    - title: 4 vCPUs, 32 GiB RAM, EBS Only (r5.xlarge.search)
+                      const: r5.xlarge.search
+                    - title: 8 vCPUs, 32 GiB RAM, EBS Only (m5.2xlarge.search)
+                      const: m5.2xlarge.search
+                    - title: 8 vCPUs, 32 GiB RAM, EBS Only (m6g.2xlarge.search)
+                      const: m6g.2xlarge.search
+                    - title: 16 vCPUs, 32 GiB RAM, EBS Only (c5.4xlarge.search)
+                      const: c5.4xlarge.search
+                    - title: 16 vCPUs, 32 GiB RAM, EBS Only (c6g.4xlarge.search)
+                      const: c6g.4xlarge.search
+                    - title: 8 vCPUs, 64 GiB RAM, EBS Only (r5.2xlarge.search)
+                      const: r5.2xlarge.search
+                    - title: 16 vCPUs, 64 GiB RAM, EBS Only (m6g.4xlarge.search)
+                      const: m6g.4xlarge.search
+                    - title: 16 vCPUs, 64 GiB RAM, EBS Only (m5.4xlarge.search)
+                      const: m5.4xlarge.search
+                    - title: 32 vCPUs, 64 GiB RAM, EBS Only (c6g.8xlarge.search)
+                      const: c6g.8xlarge.search
+                    - title: 36 vCPUs, 72 GiB RAM, EBS Only (c5.9xlarge.search)
+                      const: c5.9xlarge.search
+                    - title: 48 vCPUs, 96 GiB RAM, EBS Only (c6g.12xlarge.search)
+                      const: c6g.12xlarge.search
+                    - title: 16 vCPUs, 128 GiB RAM, EBS Only (r5.4xlarge.search)
+                      const: r5.4xlarge.search
+                    - title: 32 vCPUs, 128 GiB RAM, EBS Only (m6g.8xlarge.search)
+                      const: m6g.8xlarge.search
+                    - title: 72 vCPUs, 144 GiB RAM, EBS Only (c5.18xlarge.search)
+                      const: c5.18xlarge.search
+                    - title: 48 vCPUs, 192 GiB RAM, EBS Only (m6g.12xlarge.search)
+                      const: m6g.12xlarge.search
+                    - title: 48 vCPUs, 192 GiB RAM, EBS Only (m5.12xlarge.search)
+                      const: m5.12xlarge.search
+                    - title: 48 vCPUs, 384 GiB RAM, EBS Only (r5.12xlarge.search)
+                      const: r5.12xlarge.search
+                  ebs_options:
+                    type: object
+                    title: EBS Options
+                    description: Elastic block storage options
+                    required:
+                    - volume_size_gib
+                    - volume_type
+                    properties:
+                      volume_size_gib:
+                        title: Volume Size (GiB)
+                        description: EBS storage size per node in GiB.
+                        minimum: 10
+                        maximum: 16384
+                        type: integer
+                      volume_type:
+                        title: Volume Type
+                        description: GP2 SSDs automatically scale IOPS linearly with size. GP3 is more cost effective and provides additional options for fine tuning.
+                        type: string
+                        enum:
+                        - gp2
+                        - gp3
+                    dependencies:
+                      volume_type:
+                        oneOf:
+                        - properties:
+                            volume_type:
+                              const: gp2
+                        - properties:
+                            volume_type:
+                              const: gp3
+                            iops:
+                              title: IOPS
+                              description: Baseline input/output (I/O) performance of EBS volumes attached to data nodes. _The IOPS to volume size ratio should not exceed *500:1*._
+                              type: integer
+                              minimum: 3000
+                              maximum: 16000
+                            throughput:
+                              title: Throughput (MiB/s)
+                              description: Specifies the throughput (in MiB/s) of the EBS volumes attached to data nodes. _The Throughput to IOPS ratio should not exceed *1:4*._
+                              type: integer
+                              minimum: 125
+                              maximum: 1000
+              - properties:
+                  instance_storage_type:
+                    const: SSD
+                  instance_type:
+                    title: Instance Type
+                    type: string
+                    oneOf:
+                    - title: 2 vCPUs, 15.25 GiB RAM, 1 x 475 NVMe SSD (i3.large.search)
+                      const: i3.large.search
+                    - title: 2 vCPUs, 16 GiB RAM, 1 x 118 NVMe SSD (r6gd.large.search)
+                      const: r6gd.large.search
+                    - title: 4 vCPUs, 30.5 GiB RAM, 1 x 950 NVMe SSD (i3.xlarge.search)
+                      const: i3.xlarge.search
+                    - title: 4 vCPUs, 32 GiB RAM, 1 x 237 NVMe SSD (r6gd.xlarge.search)
+                      const: r6gd.xlarge.search
+                    - title: 8 vCPUs, 61 GiB RAM, 1 x 1900 NVMe SSD (i3.2xlarge.search)
+                      const: i3.2xlarge.search
+                    - title: 8 vCPUs, 64 GiB RAM, 1 x 475 NVMe SSD (r6gd.2xlarge.search)
+                      const: r6gd.2xlarge.search
+                    - title: 16 vCPUs, 122 GiB RAM, 2 x 1900 NVMe SSD (i3.4xlarge.search)
+                      const: i3.4xlarge.search
+                    - title: 16 vCPUs, 128 GiB RAM, 1 x 950 NVMe SSD (r6gd.4xlarge.search)
+                      const: r6gd.4xlarge.search
+                    - title: 32 vCPUs, 244 GiB RAM, 4 x 1900 NVMe SSD (i3.8xlarge.search)
+                      const: i3.8xlarge.search
+                    - title: 32 vCPUs, 256 GiB RAM, 1 x 1900 NVMe SSD (r6gd.8xlarge.search)
+                      const: r6gd.8xlarge.search
+                    - title: 48 vCPUs, 384 GiB RAM, 2 x 1425 NVMe SSD (r6gd.12xlarge.search)
+                      const: r6gd.12xlarge.search
+                    - title: 64 vCPUs, 488 GiB RAM, 8 x 1900 NVMe SSD (i3.16xlarge.search)
+                      const: i3.16xlarge.search
+                    - title: 64 vCPUs, 512 GiB RAM, 2 x 1900 NVMe SSD (r6gd.16xlarge.search)
+                      const: r6gd.16xlarge.search
     logging:
       type: object
       title: Logging
       required:
-        - index_slow_logs
-        - search_slow_logs
-        - es_application_logs
-        - audit_logs
+      - index_slow_logs
+      - search_slow_logs
+      - es_application_logs
+      - audit_logs
       properties:
         index_slow_logs:
           title: Index Slow Logs Retention (in days)
           type: integer
           default: 30
           enum:
-            [
-              1,
-              3,
-              5,
-              7,
-              14,
-              30,
-              60,
-              90,
-              120,
-              150,
-              180,
-              365,
-              400,
-              545,
-              731,
-              1827,
-              2192,
-              2557,
-              2922,
-              3288,
-              3653,
-            ]
+          - 1
+          - 3
+          - 5
+          - 7
+          - 14
+          - 30
+          - 60
+          - 90
+          - 120
+          - 150
+          - 180
+          - 365
+          - 400
+          - 545
+          - 731
+          - 1827
+          - 2192
+          - 2557
+          - 2922
+          - 3288
+          - 3653
         search_slow_logs:
           title: Search Slow Logs Retention (in days)
           type: integer
           default: 30
           enum:
-            [
-              1,
-              3,
-              5,
-              7,
-              14,
-              30,
-              60,
-              90,
-              120,
-              150,
-              180,
-              365,
-              400,
-              545,
-              731,
-              1827,
-              2192,
-              2557,
-              2922,
-              3288,
-              3653,
-            ]
+          - 1
+          - 3
+          - 5
+          - 7
+          - 14
+          - 30
+          - 60
+          - 90
+          - 120
+          - 150
+          - 180
+          - 365
+          - 400
+          - 545
+          - 731
+          - 1827
+          - 2192
+          - 2557
+          - 2922
+          - 3288
+          - 3653
         es_application_logs:
           title: Application Logs Retention (in days)
           type: integer
           default: 30
           enum:
-            [
-              1,
-              3,
-              5,
-              7,
-              14,
-              30,
-              60,
-              90,
-              120,
-              150,
-              180,
-              365,
-              400,
-              545,
-              731,
-              1827,
-              2192,
-              2557,
-              2922,
-              3288,
-              3653,
-            ]
+          - 1
+          - 3
+          - 5
+          - 7
+          - 14
+          - 30
+          - 60
+          - 90
+          - 120
+          - 150
+          - 180
+          - 365
+          - 400
+          - 545
+          - 731
+          - 1827
+          - 2192
+          - 2557
+          - 2922
+          - 3288
+          - 3653
         audit_logs:
           title: Audit Logs Retention (in days)
           type: integer
           default: 365
           enum:
-            [
-              1,
-              3,
-              5,
-              7,
-              14,
-              30,
-              60,
-              90,
-              120,
-              150,
-              180,
-              365,
-              400,
-              545,
-              731,
-              1827,
-              2192,
-              2557,
-              2922,
-              3288,
-              3653,
-            ]
+          - 1
+          - 3
+          - 5
+          - 7
+          - 14
+          - 30
+          - 60
+          - 90
+          - 120
+          - 150
+          - 180
+          - 365
+          - 400
+          - 545
+          - 731
+          - 1827
+          - 2192
+          - 2557
+          - 2922
+          - 3288
+          - 3653
     networking:
       title: Networking
       type: object
       properties:
         subnet_type:
-          $md.immutable: true
+          "$md.immutable": true
           title: Subnet Type
           description: Deploy the database to internal subnets (cannot reach the internet) or private subnets (internet egress traffic allowed)
           type: string
           enum:
-            - internal
-            - private
+          - internal
+          - private
           default: internal
-
 connections:
-  required: [network, aws_authentication]
+  required:
+  - network
+  - aws_authentication
   properties:
     network:
-      $ref: massdriver/aws-vpc
+      "$ref": massdriver/aws-vpc
     aws_authentication:
-      $ref: massdriver/aws-iam-role
-
+      "$ref": massdriver/aws-iam-role
 artifacts:
-  required: [authentication]
+  required:
+  - authentication
   properties:
     authentication:
-      $ref: massdriver/opensearch-authentication
-
+      "$ref": massdriver/opensearch-authentication
 ui:
-  ui:order: [opensearch, cluster, networking, logging]
+  ui:order:
+  - opensearch
+  - cluster
+  - networking
+  - logging
   cluster:
-    ui:order: [master_nodes, data_nodes]
+    ui:order:
+    - master_nodes
+    - data_nodes
     data_nodes:
       ui:order:
-        [instance_storage_type, instance_type, instance_count, ebs_options]
+      - instance_storage_type
+      - instance_type
+      - instance_count
+      - ebs_options
       ebs_options:
-        ui:order: [volume_size_gib, volume_type, iops, throughput]
+        ui:order:
+        - volume_size_gib
+        - volume_type
+        - iops
+        - throughput
   logging:
     ui:order:
-      - index_slow_logs
-      - search_slow_logs
-      - es_application_logs
-      - audit_logs
+    - index_slow_logs
+    - search_slow_logs
+    - es_application_logs
+    - audit_logs
