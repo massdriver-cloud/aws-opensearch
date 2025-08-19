@@ -3,7 +3,6 @@ name: aws-opensearch
 version: 1.0.0
 description: Amazon OpenSearch is a managed service that allows you to set up, manage, and scale a search engine for your website or application. It is built on top of Apache Lucene and provides a simple and easy-to-use interface for adding search functionality to your application.
 source_url: https://github.com/massdriver-cloud/aws-opensearch
-type: application
 steps:
 - path: service_linked_role
   provisioner: opentofu
