@@ -13,9 +13,8 @@ locals {
 }
 
 resource "massdriver_artifact" "authentication" {
-  field                = "authentication"
-  provider_resource_id = aws_opensearch_domain.main.arn
-  name                 = "${var.md_metadata.name_prefix} - OpenSearch Authentication"
+  field    = "authentication"
+  name     = "${var.md_metadata.name_prefix} - OpenSearch Authentication"
   artifact = jsonencode(
     {
       data = {
