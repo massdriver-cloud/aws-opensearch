@@ -7,7 +7,7 @@ resource "random_string" "domain_name_suffix" {
   # 28 char max for OS domain name, save 1 for the hyphen
   length  = 28 - length(random_pet.domain_name.id) - 1
   lower   = true
-  number  = true
+  numeric = true
   special = false
   upper   = false
 }

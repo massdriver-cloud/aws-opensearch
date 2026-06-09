@@ -395,15 +395,15 @@ connections:
   - aws_authentication
   properties:
     network:
-      "$ref": massdriver/aws-vpc
+      "$ref": aws-vpc
     aws_authentication:
-      "$ref": massdriver/aws-iam-role
+      "$ref": aws-iam-role
 artifacts:
   required:
   - authentication
   properties:
     authentication:
-      "$ref": massdriver/opensearch-authentication
+      "$ref": opensearch-authentication
 ui:
   ui:order:
   - opensearch
