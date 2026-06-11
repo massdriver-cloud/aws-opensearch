@@ -17,7 +17,7 @@ resource "aws_security_group_rule" "ingress_cidr_blocks" {
   from_port         = 0
   to_port           = 65535
   protocol          = "tcp"
-  cidr_blocks       = [var.network.data.infrastructure.cidr]
+  cidr_blocks       = [var.network.infrastructure.cidr]
   security_group_id = aws_security_group.main.id
 }
 

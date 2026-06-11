@@ -17,10 +17,10 @@ locals {
   domain_name = "${random_pet.domain_name.id}-${random_string.domain_name_suffix.result}"
 
   # calculate VPC & subnet types
-  vpc_id = element(split("/", var.network.data.infrastructure.arn), 1)
+  vpc_id = element(split("/", var.network.infrastructure.arn), 1)
   subnet_ids_by_type = {
-    "internal" = [for subnet in var.network.data.infrastructure.internal_subnets : element(split("/", subnet["arn"]), 1)]
-    "private"  = [for subnet in var.network.data.infrastructure.private_subnets : element(split("/", subnet["arn"]), 1)]
+    "internal" = [for subnet in var.network.infrastructure.internal_subnets : element(split("/", subnet["arn"]), 1)]
+    "private"  = [for subnet in var.network.infrastructure.private_subnets : element(split("/", subnet["arn"]), 1)]
   }
   num_subnets_in_vpc       = length(local.selected_subnet_type_ids)
   selected_subnet_type_ids = local.subnet_ids_by_type[var.networking.subnet_type]
